@@ -6,7 +6,7 @@
 /*   By: yez-zain <yez-zain@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/09 22:04:46 by yez-zain          #+#    #+#             */
-/*   Updated: 2022/05/09 22:32:16 by yez-zain         ###   ########.fr       */
+/*   Updated: 2022/05/10 22:33:35 by yez-zain         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,5 +36,14 @@ int	invalid_command(int argc, char *argv[])
 	write(2, "ft_ssl: Error: '", 16);
 	write(2, argv[0], ft_strlen(argv[0]));
 	write(2, "' is an invalid command.\n", 25);
+	write(2, "\nStandard commands:\n", 20);
+	write(2, "\nMessage Digest commands:\n", 26);
+	write(2, "md5\n", 4);
+	write(2, "sha256\n", 7);
+	write(2, "\nCipher commands:\n", 18);
+	write(2, "base64\n", 7);
+	write(2, "des\n", 4);
+	write(2, "des-ecb\n", 8);
+	write(2, "des-cbc\n", 8);
 	return (1);
 }

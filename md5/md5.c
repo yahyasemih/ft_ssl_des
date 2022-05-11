@@ -6,16 +6,144 @@
 /*   By: yez-zain <yez-zain@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/09 21:20:35 by yez-zain          #+#    #+#             */
-/*   Updated: 2022/05/10 17:51:49 by yez-zain         ###   ########.fr       */
+/*   Updated: 2022/05/11 14:50:34 by yez-zain         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "md5.h"
+#include "state_operations.h"
+#include "string_operations.h"
+
+void	process_block(uint32_t *bloc, t_md5_context *ctx)
+{
+	uint32_t	i;
+
+	ctx->a = ctx->h[0];
+	ctx->b = ctx->h[1];
+	ctx->c = ctx->h[2];
+	ctx->d = ctx->h[3];
+	i = 0;
+	while (i < 64)
+	{
+		if (i <= 15)
+			do_f(ctx, i);
+		else if (i <= 31)
+			do_g(ctx, i);
+		else if (i <= 47)
+			do_h(ctx, i);
+		else
+			do_i(ctx, i);
+		rotate_states(bloc, i, ctx);
+		++i;
+	}
+	ctx->h[0] += ctx->a;
+	ctx->h[1] += ctx->b;
+	ctx->h[2] += ctx->c;
+	ctx->h[3] += ctx->d;
+}
+
+static char	*last_stream_block(t_md5_context *ctx, char *buff, int r,
+	uint64_t total_len)
+{
+	char		*s;
+	uint32_t	new_len;
+	uint64_t	bits_len;
+
+	buff[r] = (char)128;
+	bits_len = 8ULL * total_len;
+	new_len = ((((r + 8) / 64) + 1) * 64) - 8;
+	ft_memcpy(buff + new_len, &bits_len, sizeof(uint64_t));
+	process_block((uint32_t *)(buff), ctx);
+	if (new_len + 8 > 64)
+		process_block((uint32_t *)(buff + 64), ctx);
+	s = malloc(17 * sizeof(char));
+	if (s == NULL)
+		return (NULL);
+	return (fill_result(ctx, s));
+}
+
+static char	*md5_from_stream(int fd)
+{
+	char			buff[128];
+	uint32_t		r;
+	t_md5_context	ctx;
+	uint64_t		total_len;
+
+	r = 1;
+	total_len = 0;
+	ctx.h[0] = 0x67452301;
+	ctx.h[1] = 0xEFCDAB89;
+	ctx.h[2] = 0x98BADCFE;
+	ctx.h[3] = 0x10325476;
+	while (r > 0)
+	{
+		r = ft_read_block(fd, buff, 64);
+		if (r < 0)
+			return (NULL);
+		ft_memset(buff + r, 0, 128 - r);
+		total_len += r;
+		if (fd == 0)
+			write(1, buff, r);
+		if (r < 64)
+			break ;
+		process_block((uint32_t *)(buff), &ctx);
+	}
+	return (last_stream_block(&ctx, buff, r, total_len));
+}
+
+static int	handle_options(int argc, char *argv[], int i, uint32_t *flags)
+{
+	char	*s;
+
+	s = NULL;
+	if (argv[i][1] == 's' && i + 1 >= argc)
+		return (argc + invalid_option_arg(argv[0], 's'));
+	if (argv[i][1] == 'r')
+		*flags |= F_REVERSE;
+	else if (argv[i][1] == 'q')
+		*flags |= F_QUIET;
+	else if (argv[i][1] == 'p')
+	{
+		s = md5_from_stream(0);
+		print_result(F_QUIET, s, "", 0);
+	}
+	else if (argv[i][1] == 's')
+	{
+		s = md5_from_string(argv[i + 1], ft_strlen(argv[i + 1]));
+		print_result(*flags, s, argv[i + 1], ft_strlen(argv[i + 1]));
+		++i;
+	}
+	else
+		invalid_option(argv[0], argv[i][1]);
+	free(s);
+	return (i);
+}
 
 int	md5(int argc, char *argv[])
 {
-	(void)argc;
-	(void)argv;
-	write(1, "handling MD5\n", 13);
+	int			i;
+	int			fd;
+	uint32_t	flags;
+
+	i = 0;
+	flags = 0;
+	while (++i < argc)
+	{
+		if (argv[i][0] == '-')
+			i = handle_options(argc, argv, i, &flags);
+		else
+		{
+			fd = open(argv[i], O_RDONLY);
+			if (fd >= 0)
+				print_result(flags, md5_from_stream(fd), argv[i],
+					ft_strlen(argv[i]));
+			else
+			{
+				write(2, "ft_ssl: md5: could not open input file: ", 40);
+				write(2, argv[i], ft_strlen(argv[i]));
+				write(2, "\n", 1);
+			}
+		}
+	}
 	return (0);
 }
