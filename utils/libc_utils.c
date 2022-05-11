@@ -6,7 +6,7 @@
 /*   By: yez-zain <yez-zain@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/09 21:22:40 by yez-zain          #+#    #+#             */
-/*   Updated: 2022/05/09 21:22:51 by yez-zain         ###   ########.fr       */
+/*   Updated: 2022/05/11 19:01:21 by yez-zain         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,6 +54,8 @@ void	*ft_memset(void *b, int c, size_t len)
 	char	*s;
 	size_t	i;
 
+	if (b == NULL)
+		return (NULL);
 	s = (char *)b;
 	i = 0;
 	while (i < len)

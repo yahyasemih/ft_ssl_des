@@ -1,25 +1,28 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_ssl.c                                           :+:      :+:    :+:   */
+/*   free_args.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: yez-zain <yez-zain@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/05/09 20:59:37 by yez-zain          #+#    #+#             */
-/*   Updated: 2022/05/11 18:03:23 by yez-zain         ###   ########.fr       */
+/*   Created: 2022/05/11 18:21:00 by yez-zain          #+#    #+#             */
+/*   Updated: 2022/05/11 18:22:09 by yez-zain         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "ft_ssl.h"
+#include <stdlib.h>
 
-int	get_command_index(const char *cmd)
+void	free_args(int argc, char **argv)
 {
 	int	i;
 
-	if (cmd == NULL)
-		return (NUM_COMMANDS);
+	if (argv == NULL)
+		return ;
 	i = 0;
-	while (i < NUM_COMMANDS && ft_strcmp(cmd, g_commands[i]) != 0)
+	while (i < argc)
+	{
+		free(argv[i]);
 		++i;
-	return (i);
+	}
+	free(argv);
 }

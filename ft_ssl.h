@@ -6,7 +6,7 @@
 /*   By: yez-zain <yez-zain@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/09 19:20:04 by yez-zain          #+#    #+#             */
-/*   Updated: 2022/05/10 22:45:19 by yez-zain         ###   ########.fr       */
+/*   Updated: 2022/05/11 18:22:44 by yez-zain         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,4 +47,5 @@ int								get_command_index(const char *cmd);
 
 void							parse_commands(void);
 
+void							free_args(int argc, char **argv);
 #endif

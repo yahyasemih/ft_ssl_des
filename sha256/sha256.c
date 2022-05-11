@@ -6,7 +6,7 @@
 /*   By: yez-zain <yez-zain@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/10 22:43:42 by yez-zain          #+#    #+#             */
-/*   Updated: 2022/05/11 16:48:20 by yez-zain         ###   ########.fr       */
+/*   Updated: 2022/05/11 19:15:12 by yez-zain         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -96,17 +96,26 @@ static int	handle_files(char *argv[], int i, uint32_t flags)
 	int		fd;
 	int		return_value;
 	char	*s;
+	char	*input;
 
 	return_value = 0;
-	fd = open(argv[i], O_RDONLY);
+	if (argv == NULL)
+		input = "/dev/stdin";
+	else
+		input = argv[i];
+	fd = open(input, O_RDONLY);
 	if (fd >= 0)
 	{
 		s = sha256_from_stream(fd);
-		sha256_print_result(flags | F_IS_FILE, s, argv[i], ft_strlen(argv[i]));
+		if (argv == NULL)
+			flags |= F_QUIET;
+		else
+			flags |= F_IS_FILE;
+		sha256_print_result(flags, s, input, ft_strlen(input));
 		free(s);
 	}
 	else
-		return_value = invalid_file(argv[0], argv[i]);
+		return_value = invalid_file(argv[0], input);
 	close(fd);
 	return (return_value);
 }
@@ -122,6 +131,8 @@ int	sha256(int argc, char *argv[])
 	flags = 0;
 	fd = INT32_MAX;
 	return_value = 0;
+	if (argc == 1)
+		handle_files(NULL, 0, F_IS_STDIN);
 	while (++i < argc)
 	{
 		if (fd == INT32_MAX && argv[i][0] == '-')
