@@ -6,7 +6,7 @@
 /*   By: yez-zain <yez-zain@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/09 19:20:04 by yez-zain          #+#    #+#             */
-/*   Updated: 2022/05/11 18:22:44 by yez-zain         ###   ########.fr       */
+/*   Updated: 2022/05/11 19:39:24 by yez-zain         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,11 +24,9 @@
 # include "utils/commands_utils.h"
 # include "utils/libc_utils.h"
 
-# define NUM_COMMANDS 4
-
 typedef int						(*t_command_function)(int argc, char *argv[]);
 
-static const t_command_function	g_command_functions[NUM_COMMANDS + 1] = {
+static const t_command_function	g_command_functions[] = {
 	md5,
 	sha256,
 	base64,
@@ -36,7 +34,7 @@ static const t_command_function	g_command_functions[NUM_COMMANDS + 1] = {
 	invalid_command
 };
 
-static const char				*g_commands[NUM_COMMANDS] = {
+static const char				*g_commands[] = {
 	"md5",
 	"sha256",
 	"base64",
