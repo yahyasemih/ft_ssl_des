@@ -1,24 +1,31 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   string_operations.h                                :+:      :+:    :+:   */
+/*   write_in_hex.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: yez-zain <yez-zain@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/05/11 14:30:18 by yez-zain          #+#    #+#             */
-/*   Updated: 2022/05/11 16:14:54 by yez-zain         ###   ########.fr       */
+/*   Created: 2022/05/11 16:11:39 by yez-zain          #+#    #+#             */
+/*   Updated: 2022/05/11 16:12:32 by yez-zain         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef STRING_OPERATIONS_H
-# define STRING_OPERATIONS_H
+#include "write_in_hex.h"
 
-# include "md5.h"
+void	write_in_hex(const char *str, int len)
+{
+	int		i;
+	char	c;
+	char	*hex;
 
-char	*fill_result(t_md5_context *ctx, char *str);
-char	*prepare_input_string(const char *str);
-void	md5_print_result(uint32_t flags, const char *s, const char *src,
-			int src_len);
-char	*md5_from_string(const char *str, uint64_t len);
-
-#endif
+	i = 0;
+	hex = "0123456789abcdef";
+	while (i < len)
+	{
+		c = hex[(str[i] & 0xF0) >> 4];
+		write(1, &c, 1);
+		c = hex[str[i] & 0x0F];
+		write(1, &c, 1);
+		++i;
+	}
+}

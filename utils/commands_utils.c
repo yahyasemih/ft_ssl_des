@@ -6,7 +6,7 @@
 /*   By: yez-zain <yez-zain@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/09 22:04:46 by yez-zain          #+#    #+#             */
-/*   Updated: 2022/05/10 22:33:35 by yez-zain         ###   ########.fr       */
+/*   Updated: 2022/05/11 16:01:18 by yez-zain         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,7 @@
 
 int	invalid_option(const char *cmd, char o)
 {
+	write(2, "ft_ssl: ", 8);
 	write(2, cmd, ft_strlen(cmd));
 	write(2, ": invalid option -- ", 20);
 	write(2, &o, 1);
@@ -23,6 +24,7 @@ int	invalid_option(const char *cmd, char o)
 
 int	invalid_option_arg(const char *cmd, char o)
 {
+	write(2, "ft_ssl: ", 8);
 	write(2, cmd, ft_strlen(cmd));
 	write(2, ": option requires an argument -- ", 33);
 	write(2, &o, 1);
@@ -45,5 +47,16 @@ int	invalid_command(int argc, char *argv[])
 	write(2, "des\n", 4);
 	write(2, "des-ecb\n", 8);
 	write(2, "des-cbc\n", 8);
+	return (1);
+}
+
+int	invalid_file(const char *cmd, const char *file)
+{
+	write(2, "ft_ssl: ", 8);
+	write(2, cmd, ft_strlen(cmd));
+	write(2, ": ", 2);
+	write(2, file, ft_strlen(file));
+	write(2, ": ", 2);
+	perror("");
 	return (1);
 }

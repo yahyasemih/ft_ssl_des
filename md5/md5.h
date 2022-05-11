@@ -6,7 +6,7 @@
 /*   By: yez-zain <yez-zain@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/09 21:19:26 by yez-zain          #+#    #+#             */
-/*   Updated: 2022/05/11 14:50:21 by yez-zain         ###   ########.fr       */
+/*   Updated: 2022/05/11 16:13:36 by yez-zain         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,13 +18,14 @@
 # include "../utils/commands_utils.h"
 # include "../utils/ft_read_block.h"
 # include "../utils/libc_utils.h"
+# include "../utils/write_in_hex.h"
 
 # define F_QUIET 0x1
 # define F_REVERSE 0x2
 # define F_IS_STDIN 0x4
 # define F_IS_FILE 0x8
 
-const static uint32_t	g_k[64] = {
+const static uint32_t	g_md5_k[64] = {
 	0xd76aa478, 0xe8c7b756, 0x242070db, 0xc1bdceee,
 	0xf57c0faf, 0x4787c62a, 0xa8304613, 0xfd469501,
 	0x698098d8, 0x8b44f7af, 0xffff5bb1, 0x895cd7be,

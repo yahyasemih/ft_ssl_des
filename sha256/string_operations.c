@@ -5,38 +5,15 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: yez-zain <yez-zain@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/05/11 14:28:47 by yez-zain          #+#    #+#             */
-/*   Updated: 2022/05/11 16:40:12 by yez-zain         ###   ########.fr       */
+/*   Created: 2022/05/11 16:25:54 by yez-zain          #+#    #+#             */
+/*   Updated: 2022/05/11 16:40:35 by yez-zain         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "string_operations.h"
+#include "state_operations.h"
 
-char	*fill_result(t_md5_context *ctx, char *str)
-{
-	int		i;
-	int		j;
-	char	*s;
-
-	if (str == NULL)
-		return (NULL);
-	i = 0;
-	while (i < 4)
-	{
-		j = 0;
-		s = (char *)(ctx->h + i);
-		while (j < 4)
-		{
-			str[i * 4 + j] = s[j];
-			++j;
-		}
-		++i;
-	}
-	str[16] = '\0';
-	return (str);
-}
-
-char	*prepare_input_string(const char *str)
+char	*sha256_prepare_input_string(const char *str)
 {
 	char		*s;
 	int			r;
@@ -52,20 +29,21 @@ char	*prepare_input_string(const char *str)
 	ft_memcpy(s, str, r);
 	s[r] = (char)128;
 	bits_len = 8ULL * r;
+	swap_bytes(&bits_len, sizeof(int64_t));
 	ft_memcpy(s + new_len, &bits_len, sizeof(uint64_t));
 	return (s);
 }
 
-void	md5_print_result(uint32_t flags, const char *s, const char *src,
+void	sha256_print_result(uint32_t flags, const char *s, const char *src,
 	int src_len)
 {
 	if (s == NULL)
 		return ;
 	else if ((flags & F_QUIET) != 0)
-		write_in_hex(s, 16);
+		write_in_hex(s, 32);
 	else if ((flags & F_REVERSE) != 0)
 	{
-		write_in_hex(s, 16);
+		write_in_hex(s, 32);
 		write(1, " \"", 1 + ((flags & F_IS_FILE) == 0));
 		write(1, src, src_len);
 		write(1, "\"", (flags & F_IS_FILE) == 0);
@@ -76,41 +54,78 @@ void	md5_print_result(uint32_t flags, const char *s, const char *src,
 			&& ft_strcmp(src, "stdin") == 0)
 			write(1, "(", 1);
 		else
-			write(1, "MD5(", 4);
+			write(1, "SHA256(", 7);
 		write(1, "\"", (flags & F_IS_FILE) == 0);
 		write(1, src, src_len);
 		write(1, "\"", (flags & F_IS_FILE) == 0);
 		write (1, ")= ", 3);
-		write_in_hex(s, 16);
+		write_in_hex(s, 32);
 	}
 	write(1, "\n", 1);
 }
 
-char	*md5_from_string(const char *str, uint64_t len)
+char	*sha256_fill_result(t_sha256_context *ctx, char *str,
+	int hash_nbr)
 {
-	t_md5_context	ctx;
-	uint32_t		offset;
-	char			*s;
-	char			*padded_str;
+	int		i;
+	int		j;
+	char	*s;
 
-	ctx.h[0] = 0x67452301;
-	ctx.h[1] = 0xEFCDAB89;
-	ctx.h[2] = 0x98BADCFE;
-	ctx.h[3] = 0x10325476;
-	offset = 0;
-	padded_str = prepare_input_string(str);
+	if (str == NULL)
+		return (NULL);
+	i = 0;
+	while (i < hash_nbr)
+	{
+		j = 0;
+		s = (char *)(ctx->big_h + i);
+		while (j < 4)
+		{
+			str[i * 4 + j] = s[3 - j];
+			++j;
+		}
+		++i;
+	}
+	str[hash_nbr * 4] = '\0';
+	return (str);
+}
+
+static void	init_words_from_str(uint32_t *w, const char *str, int i)
+{
+	uint32_t	t;
+
+	t = 0;
+	while (t < 16)
+	{
+		w[t] = *(uint32_t *)(str + i + t * 4);
+		swap_bytes(&w[t], sizeof(w[t]));
+		++t;
+	}
+}
+
+char	*sha256_from_string(const char *str, uint64_t len)
+{
+	t_sha256_context	ctx;
+	uint32_t			i;
+	uint32_t			t;
+	char				*padded_str;
+
+	sha256_init_ctx(&ctx);
+	i = 0;
+	padded_str = sha256_prepare_input_string(str);
 	if (padded_str == NULL)
 		return (NULL);
-	while (offset < len)
+	while (i < len)
 	{
-		process_block((uint32_t *)(padded_str + offset), &ctx);
-		offset += 64;
+		init_words_from_str(ctx.w, padded_str, i);
+		t = 16;
+		while (t < 64)
+		{
+			ctx.w[t] = small_sigma_32(ctx.w[t - 2], 1) + ctx.w[t - 7]
+				+ small_sigma_32(ctx.w[t - 15], 0) + ctx.w[t - 16];
+			++t;
+		}
+		sha256_block_iteration(&ctx);
+		i += 64;
 	}
-	s = malloc(17 * sizeof(char));
-	if (s == NULL)
-	{
-		free(padded_str);
-		return (NULL);
-	}
-	return (fill_result(&ctx, s));
+	return (sha256_fill_result(&ctx, malloc(33 * sizeof(char)), 8));
 }

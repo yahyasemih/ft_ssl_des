@@ -1,24 +1,31 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   string_operations.h                                :+:      :+:    :+:   */
+/*   swap_bytes.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: yez-zain <yez-zain@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/05/11 14:30:18 by yez-zain          #+#    #+#             */
-/*   Updated: 2022/05/11 16:14:54 by yez-zain         ###   ########.fr       */
+/*   Created: 2022/05/11 15:59:09 by yez-zain          #+#    #+#             */
+/*   Updated: 2022/05/11 15:59:10 by yez-zain         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef STRING_OPERATIONS_H
-# define STRING_OPERATIONS_H
+#include "swap_bytes.h"
 
-# include "md5.h"
+void	swap_bytes(void *x, uint32_t size)
+{
+	char		s[16];
+	char		c;
+	uint32_t	i;
 
-char	*fill_result(t_md5_context *ctx, char *str);
-char	*prepare_input_string(const char *str);
-void	md5_print_result(uint32_t flags, const char *s, const char *src,
-			int src_len);
-char	*md5_from_string(const char *str, uint64_t len);
-
-#endif
+	i = 0;
+	ft_memcpy(s, x, size);
+	while (i < size / 2)
+	{
+		c = s[i];
+		s[i] = s[size - 1 - i];
+		s[size - 1 - i] = c;
+		++i;
+	}
+	ft_memcpy(x, s, size);
+}

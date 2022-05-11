@@ -6,7 +6,7 @@
 /*   By: yez-zain <yez-zain@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/11 14:24:32 by yez-zain          #+#    #+#             */
-/*   Updated: 2022/05/11 14:29:01 by yez-zain         ###   ########.fr       */
+/*   Updated: 2022/05/11 15:00:18 by yez-zain         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,7 +45,7 @@ void	rotate_states(uint32_t *bloc, uint32_t i, t_md5_context *ctx)
 	tmp = ctx->d;
 	ctx->d = ctx->c;
 	ctx->c = ctx->b;
-	a = ctx->a + ctx->f + g_k[i] + bloc[ctx->g];
+	a = ctx->a + ctx->f + g_md5_k[i] + bloc[ctx->g];
 	left_rotate = ((a << g_r[i]) | (a >> (32 - g_r[i])));
 	ctx->b += left_rotate;
 	ctx->a = tmp;

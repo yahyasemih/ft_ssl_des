@@ -6,7 +6,7 @@
 #    By: yez-zain <yez-zain@student.1337.ma>        +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/05/10 17:48:29 by yez-zain          #+#    #+#              #
-#    Updated: 2022/05/11 14:33:04 by yez-zain         ###   ########.fr        #
+#    Updated: 2022/05/11 16:51:48 by yez-zain         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -15,10 +15,15 @@ CC = gcc
 FLAGS = -Wall -Wextra -Werror
 SRCS = ft_ssl.c main.c md5/md5.c base64/base64.c base64/encode.c base64/decode.c\
 	utils/commands_utils.c utils/ft_read_block.c utils/libc_utils.c des/des.c\
-	sha256/sha256.c md5/state_operations.c md5/string_operations.c
+	sha256/sha256.c md5/state_operations.c md5/string_operations.c\
+	utils/swap_bytes.c utils/write_in_hex.c sha256/state_operations.c\
+	sha256/string_operations.c sha256/block_operations.c\
+	md5/block_operations.c
 DEPS = ft_ssl.h md5/md5.h base64/base64.h des/des.h sha256/sha256.h\
 	utils/commands_utils.h utils/ft_read_block.h utils/libc_utils.h\
-	md5/state_operations.h md5/string_operations.h
+	md5/state_operations.h md5/string_operations.h utils/swap_bytes.h\
+	utils/write_in_hex.h sha256/state_operations.h sha256/string_operations.h\
+	sha256/block_operations.h md5/block_operations.h
 OBJECTS = $(SRCS:.c=.o)
 RED = \033[1;31m
 GREEN = \033[1;32m

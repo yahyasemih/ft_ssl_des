@@ -1,24 +1,21 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   string_operations.h                                :+:      :+:    :+:   */
+/*   swap_bytes.h                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: yez-zain <yez-zain@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/05/11 14:30:18 by yez-zain          #+#    #+#             */
-/*   Updated: 2022/05/11 16:14:54 by yez-zain         ###   ########.fr       */
+/*   Created: 2022/05/11 15:59:26 by yez-zain          #+#    #+#             */
+/*   Updated: 2022/05/11 15:59:28 by yez-zain         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef STRING_OPERATIONS_H
-# define STRING_OPERATIONS_H
+#ifndef SWAP_BYTES_H
+# define SWAP_BYTES_H
 
-# include "md5.h"
+# include <stdlib.h>
+# include "libc_utils.h"
 
-char	*fill_result(t_md5_context *ctx, char *str);
-char	*prepare_input_string(const char *str);
-void	md5_print_result(uint32_t flags, const char *s, const char *src,
-			int src_len);
-char	*md5_from_string(const char *str, uint64_t len);
+void	swap_bytes(void *x, uint32_t size);
 
 #endif

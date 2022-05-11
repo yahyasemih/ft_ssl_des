@@ -6,41 +6,14 @@
 /*   By: yez-zain <yez-zain@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/09 21:20:35 by yez-zain          #+#    #+#             */
-/*   Updated: 2022/05/11 14:50:34 by yez-zain         ###   ########.fr       */
+/*   Updated: 2022/05/11 16:52:18 by yez-zain         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "md5.h"
+#include "block_operations.h"
 #include "state_operations.h"
 #include "string_operations.h"
-
-void	process_block(uint32_t *bloc, t_md5_context *ctx)
-{
-	uint32_t	i;
-
-	ctx->a = ctx->h[0];
-	ctx->b = ctx->h[1];
-	ctx->c = ctx->h[2];
-	ctx->d = ctx->h[3];
-	i = 0;
-	while (i < 64)
-	{
-		if (i <= 15)
-			do_f(ctx, i);
-		else if (i <= 31)
-			do_g(ctx, i);
-		else if (i <= 47)
-			do_h(ctx, i);
-		else
-			do_i(ctx, i);
-		rotate_states(bloc, i, ctx);
-		++i;
-	}
-	ctx->h[0] += ctx->a;
-	ctx->h[1] += ctx->b;
-	ctx->h[2] += ctx->c;
-	ctx->h[3] += ctx->d;
-}
 
 static char	*last_stream_block(t_md5_context *ctx, char *buff, int r,
 	uint64_t total_len)
@@ -105,18 +78,38 @@ static int	handle_options(int argc, char *argv[], int i, uint32_t *flags)
 	else if (argv[i][1] == 'p')
 	{
 		s = md5_from_stream(0);
-		print_result(F_QUIET, s, "", 0);
+		md5_print_result(F_QUIET, s, "", 0);
 	}
 	else if (argv[i][1] == 's')
 	{
 		s = md5_from_string(argv[i + 1], ft_strlen(argv[i + 1]));
-		print_result(*flags, s, argv[i + 1], ft_strlen(argv[i + 1]));
+		md5_print_result(*flags, s, argv[i + 1], ft_strlen(argv[i + 1]));
 		++i;
 	}
 	else
-		invalid_option(argv[0], argv[i][1]);
+		return (argc + invalid_option(argv[0], argv[i][1]));
 	free(s);
 	return (i);
+}
+
+static int	handle_files(char *argv[], int i, uint32_t flags)
+{
+	int		fd;
+	int		return_value;
+	char	*s;
+
+	return_value = 0;
+	fd = open(argv[i], O_RDONLY);
+	if (fd >= 0)
+	{
+		s = md5_from_stream(fd);
+		md5_print_result(flags | F_IS_FILE, s, argv[i], ft_strlen(argv[i]));
+		free(s);
+	}
+	else
+		return_value = invalid_file(argv[0], argv[i]);
+	close(fd);
+	return (return_value);
 }
 
 int	md5(int argc, char *argv[])
@@ -124,26 +117,18 @@ int	md5(int argc, char *argv[])
 	int			i;
 	int			fd;
 	uint32_t	flags;
+	int			return_value;
 
 	i = 0;
 	flags = 0;
+	fd = INT32_MAX;
+	return_value = 0;
 	while (++i < argc)
 	{
-		if (argv[i][0] == '-')
+		if (fd == INT32_MAX && argv[i][0] == '-')
 			i = handle_options(argc, argv, i, &flags);
 		else
-		{
-			fd = open(argv[i], O_RDONLY);
-			if (fd >= 0)
-				print_result(flags, md5_from_stream(fd), argv[i],
-					ft_strlen(argv[i]));
-			else
-			{
-				write(2, "ft_ssl: md5: could not open input file: ", 40);
-				write(2, argv[i], ft_strlen(argv[i]));
-				write(2, "\n", 1);
-			}
-		}
+			return_value = handle_files(argv, i, flags);
 	}
-	return (0);
+	return (i > argc || return_value > 0);
 }

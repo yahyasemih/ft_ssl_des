@@ -1,24 +1,28 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   string_operations.h                                :+:      :+:    :+:   */
+/*   state_operations.h                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: yez-zain <yez-zain@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/05/11 14:30:18 by yez-zain          #+#    #+#             */
-/*   Updated: 2022/05/11 16:14:54 by yez-zain         ###   ########.fr       */
+/*   Created: 2022/05/11 16:19:49 by yez-zain          #+#    #+#             */
+/*   Updated: 2022/05/11 16:24:59 by yez-zain         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef STRING_OPERATIONS_H
-# define STRING_OPERATIONS_H
+#ifndef STATE_OPERATIONS_H
+# define STATE_OPERATIONS_H
 
-# include "md5.h"
+# include "sha256.h"
 
-char	*fill_result(t_md5_context *ctx, char *str);
-char	*prepare_input_string(const char *str);
-void	md5_print_result(uint32_t flags, const char *s, const char *src,
-			int src_len);
-char	*md5_from_string(const char *str, uint64_t len);
+uint32_t	ch_32(uint32_t x, uint32_t y, uint32_t z);
+
+uint32_t	maj_32(uint32_t x, uint32_t y, uint32_t z);
+
+uint32_t	rotr_32(uint32_t x, uint32_t n);
+
+uint32_t	big_sigma_32(uint32_t x, int i);
+
+uint32_t	small_sigma_32(uint32_t x, int i);
 
 #endif
