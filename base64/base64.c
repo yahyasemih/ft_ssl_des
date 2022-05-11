@@ -6,7 +6,7 @@
 /*   By: yez-zain <yez-zain@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/09 21:29:03 by yez-zain          #+#    #+#             */
-/*   Updated: 2022/05/10 17:47:45 by yez-zain         ###   ########.fr       */
+/*   Updated: 2022/05/11 19:28:11 by yez-zain         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,7 @@ static int	open_files(t_base64_context *ctx, char mode, char *file)
 		write(2, file, ft_strlen(file));
 		write(2, "\n", 1);
 	}
-	return (ctx->input_fd >= 0 && ctx->output_fd >= 0);
+	return (ctx->input_fd < 0 || ctx->output_fd < 0);
 }
 
 static void	init_ctx(t_base64_context *ctx)
