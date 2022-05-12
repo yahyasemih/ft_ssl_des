@@ -6,7 +6,7 @@
 /*   By: yez-zain <yez-zain@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/09 21:29:03 by yez-zain          #+#    #+#             */
-/*   Updated: 2022/05/11 19:28:11 by yez-zain         ###   ########.fr       */
+/*   Updated: 2022/05/12 20:30:30 by yez-zain         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,7 @@ static int	open_files(t_base64_context *ctx, char mode, char *file)
 	{
 		ctx->output_fd = open(file, O_WRONLY | O_CREAT, 0644);
 		if (ctx->output_fd < 0)
-			write(2, "base64: Error: unable to open output file: ", 42);
+			write(2, "base64: Error: unable to open output file: ", 43);
 	}
 	if (ctx->input_fd < 0 || ctx->output_fd < 0)
 	{
