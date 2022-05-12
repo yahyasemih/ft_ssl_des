@@ -1,20 +1,20 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   des.c                                              :+:      :+:    :+:   */
+/*   des_ecb.h                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: yez-zain <yez-zain@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/05/10 22:26:25 by yez-zain          #+#    #+#             */
-/*   Updated: 2022/05/10 22:27:28 by yez-zain         ###   ########.fr       */
+/*   Created: 2022/05/10 22:25:46 by yez-zain          #+#    #+#             */
+/*   Updated: 2022/05/12 21:01:10 by yez-zain         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "des.h"
+#ifndef DES_ECB_H
+# define DES_ECB_H
 
-int	des(int argc, char *argv[])
-{
-	(void)argc;
-	(void)argv;
-	return (0);
-}
+# include "des.h"
+
+int	des_ecb(int argc, char *argv[]);
+
+#endif

@@ -6,7 +6,7 @@
 /*   By: yez-zain <yez-zain@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/09 19:20:04 by yez-zain          #+#    #+#             */
-/*   Updated: 2022/05/11 19:39:24 by yez-zain         ###   ########.fr       */
+/*   Updated: 2022/05/12 20:59:13 by yez-zain         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,8 @@
 # include <unistd.h>
 
 # include "base64/base64.h"
-# include "des/des.h"
+# include "des/des_cbc.h"
+# include "des/des_ecb.h"
 # include "md5/md5.h"
 # include "sha256/sha256.h"
 # include "utils/commands_utils.h"
@@ -30,7 +31,9 @@ static const t_command_function	g_command_functions[] = {
 	md5,
 	sha256,
 	base64,
-	des,
+	des_cbc,
+	des_ecb,
+	des_cbc,
 	invalid_command
 };
 
@@ -38,7 +41,9 @@ static const char				*g_commands[] = {
 	"md5",
 	"sha256",
 	"base64",
-	"des"
+	"des",
+	"des-ecb"
+	"des-cbc"
 };
 
 int								get_command_index(const char *cmd);
