@@ -6,22 +6,81 @@
 /*   By: yez-zain <yez-zain@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/10 22:26:25 by yez-zain          #+#    #+#             */
-/*   Updated: 2022/05/12 23:43:49 by yez-zain         ###   ########.fr       */
+/*   Updated: 2022/05/15 22:47:53 by yez-zain         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "des_cbc.h"
+#include "des_routines.h"
+#include "../base64/base64.h"
 
-static int	encode_cbc(t_des_context *ctx)
+static void	cbc_process_block(t_des_context *ctx, uint64_t *data)
 {
-	(void)ctx;
-	return (0);
+	t_des_processing_context	pr_ctx;
+	int							i;
+
+	init(data, &pr_ctx, ctx);
+	generate_sub_keys_parts(&pr_ctx);
+	generate_sub_keys(&pr_ctx);
+	i = 0;
+	while (i < 16)
+	{
+		encrypt_decrypt(&pr_ctx, ctx, i);
+		calculate_apply_f(&pr_ctx);
+		++i;
+	}
+	pr_ctx.pre_out = (((uint64_t)pr_ctx.r) << 32) | (uint64_t) pr_ctx.l;
+	*data = 0;
+	i = 0;
+	while (i < 64)
+	{
+		*data <<= 1;
+		*data |= (pr_ctx.pre_out >> (64 - g_rinit_permutation[i])) & 0x1;
+		i++;
+	}
 }
 
-static int	decode_cbc(t_des_context *ctx)
+static int	padding_data(uint64_t *data, int len)
 {
-	(void)ctx;
-	return (0);
+	int	i;
+
+	if (len == 8)
+		return (8);
+	i = len;
+	while (i < 8)
+	{
+		ft_memset(((char *)data) + i, 8 - len, 1);
+		++i;
+	}
+	return (len);
+}
+
+static int	cbc_process(t_des_context *ctx)
+{
+	int			r;
+	int			old_r;
+	uint64_t	block;
+	char		*res;
+	char		tmp[9];
+
+	r = 1;
+	old_r = 1337;
+	res = NULL;
+	ft_memset(tmp, 0, 9);
+	while (r > 0)
+	{
+		r = ft_read_block(ctx->input_fd, (char *)&block, sizeof(uint64_t));
+		if (old_r < 8 && r == 0)
+			break ;
+		old_r = padding_data(&block, r);
+		cbc_process_block(ctx, &block);
+		swap_bytes(&block, 8);
+		res = ft_strjoin(res, ft_memcpy(tmp, &block, sizeof(uint64_t)), 1);
+	}
+	if (ctx->is_base64 && ctx->mode == 'e')
+		res = encode_str(res);
+	write(ctx->output_fd, res, ft_strlen(res));
+	return (r < 0 || res == NULL);
 }
 
 int	des_cbc(int argc, char *argv[])
@@ -47,7 +106,5 @@ int	des_cbc(int argc, char *argv[])
 				return (invalid_option(argv[0], argv[i][1]));
 		}
 	}
-	if (ctx.mode == 'd')
-		return (decode_cbc(&ctx));
-	return (encode_cbc(&ctx));
+	return (cbc_process(&ctx));
 }
