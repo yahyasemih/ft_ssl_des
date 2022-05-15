@@ -6,7 +6,7 @@
 /*   By: yez-zain <yez-zain@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/12 21:00:27 by yez-zain          #+#    #+#             */
-/*   Updated: 2022/05/12 23:42:55 by yez-zain         ###   ########.fr       */
+/*   Updated: 2022/05/15 22:41:01 by yez-zain         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,7 @@
 
 # include <fcntl.h>
 # include <stdlib.h>
+# include <pwd.h>
 # include <unistd.h>
 # include "../utils/commands_utils.h"
 
@@ -40,7 +41,7 @@ static const char	g_rinit_permutation[] = {
 	33, 1, 41, 9, 49, 17, 57, 25
 };
 
-static const char	g_expansion[] = {
+static const char	g_expand[] = {
 	32, 1, 2, 3, 4, 5,
 	4, 5, 6, 7, 8, 9,
 	8, 9, 10, 11, 12, 13,
@@ -124,15 +125,33 @@ static const char	g_iteration_shift[] = {
 
 typedef struct s_des_context
 {
-	char		mode;
-	int			is_base64;
-	int			input_fd;
-	int			output_fd;
-	const char	*key;
-	const char	*salt;
-	const char	*iv;
-	const char	*passwd;
+	char	mode;
+	int		is_base64;
+	int		input_fd;
+	int		output_fd;
+	char	key[17];
+	char	salt[17];
+	char	iv[17];
+	char	passwd[_PASSWORD_LEN + 1];
 }	t_des_context;
+
+typedef struct s_des_processing_context
+{
+	uint64_t	m;
+	uint32_t	l;
+	uint32_t	r;
+	uint32_t	c[17];
+	uint32_t	d[17];
+	uint64_t	k;
+	uint64_t	kn[16];
+	uint64_t	kp;
+	uint8_t		row;
+	uint8_t		cl;
+	uint32_t	output;
+	uint32_t	f;
+	uint64_t	pre_out;
+	uint64_t	expanded;
+}	t_des_processing_context;
 
 int		handle_option_param(t_des_context *ctx, char opt, const char *arg);
 

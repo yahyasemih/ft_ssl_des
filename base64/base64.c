@@ -6,7 +6,7 @@
 /*   By: yez-zain <yez-zain@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/09 21:29:03 by yez-zain          #+#    #+#             */
-/*   Updated: 2022/05/12 20:30:30 by yez-zain         ###   ########.fr       */
+/*   Updated: 2022/05/14 22:17:48 by yez-zain         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,6 +45,20 @@ static void	init_ctx(t_base64_context *ctx)
 	ctx->mode = 'e';
 }
 
+static int	do_work(t_base64_context *ctx)
+{
+	char	*res;
+
+	if (ctx->mode == 'd')
+		res = decode(ctx);
+	else
+		res = encode(ctx);
+	if (res == NULL)
+		return (1);
+	write(ctx->output_fd, res, ft_strlen(res));
+	return (0);
+}
+
 int	base64(int argc, char *argv[])
 {
 	t_base64_context	ctx;
@@ -68,7 +82,5 @@ int	base64(int argc, char *argv[])
 				return (invalid_option(argv[0], argv[i][1]));
 		}
 	}
-	if (ctx.mode == 'd')
-		return (decode(&ctx));
-	return (encode(&ctx));
+	return (do_work(&ctx));
 }

@@ -6,7 +6,7 @@
 /*   By: yez-zain <yez-zain@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/12 23:37:26 by yez-zain          #+#    #+#             */
-/*   Updated: 2022/05/12 23:42:45 by yez-zain         ###   ########.fr       */
+/*   Updated: 2022/05/15 00:48:27 by yez-zain         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,10 +44,10 @@ void	init_ctx(t_des_context *ctx)
 	ctx->input_fd = 0;
 	ctx->output_fd = 1;
 	ctx->is_base64 = 0;
-	ctx->key = NULL;
-	ctx->passwd = NULL;
-	ctx->iv = NULL;
-	ctx->salt = NULL;
+	ft_memset(&ctx->key, 0, 17);
+	ft_memset(&ctx->iv, 0, 17);
+	ft_memset(&ctx->salt, 0, 17);
+	ft_memset(&ctx->passwd, 0, _PASSWORD_LEN + 1);
 }
 
 int	handle_option_param(t_des_context *ctx, char opt, const char *arg)
@@ -60,13 +60,13 @@ int	handle_option_param(t_des_context *ctx, char opt, const char *arg)
 			return (1);
 	}
 	else if (opt == 'k')
-		ctx->key = arg;
+		ft_memcpy(&ctx->key, arg, min(ft_strlen(arg) + 1, 16));
 	else if (opt == 's')
-		ctx->salt = arg;
+		ft_memcpy(&ctx->salt, arg, min(ft_strlen(arg) + 1, 16));
 	else if (opt == 'p')
-		ctx->passwd = arg;
+		ft_memcpy(&ctx->passwd, arg, min(ft_strlen(arg) + 1, _PASSWORD_LEN));
 	else if (opt == 'v')
-		ctx->iv = arg;
+		ft_memcpy(&ctx->iv, arg, min(ft_strlen(arg) + 1, 16));
 	return (0);
 }
 

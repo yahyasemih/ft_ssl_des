@@ -6,7 +6,7 @@
 /*   By: yez-zain <yez-zain@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/09 19:20:04 by yez-zain          #+#    #+#             */
-/*   Updated: 2022/05/12 20:59:13 by yez-zain         ###   ########.fr       */
+/*   Updated: 2022/05/14 15:50:06 by yez-zain         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,7 +42,7 @@ static const char				*g_commands[] = {
 	"sha256",
 	"base64",
 	"des",
-	"des-ecb"
+	"des-ecb",
 	"des-cbc"
 };
 

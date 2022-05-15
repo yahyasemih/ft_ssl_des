@@ -6,7 +6,7 @@
 /*   By: yez-zain <yez-zain@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/09 22:04:46 by yez-zain          #+#    #+#             */
-/*   Updated: 2022/05/11 16:01:18 by yez-zain         ###   ########.fr       */
+/*   Updated: 2022/05/15 00:48:50 by yez-zain         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,4 +59,12 @@ int	invalid_file(const char *cmd, const char *file)
 	write(2, ": ", 2);
 	perror("");
 	return (1);
+}
+
+int	min(int a, int b)
+{
+	if (a < b)
+		return (a);
+	else
+		return (b);
 }

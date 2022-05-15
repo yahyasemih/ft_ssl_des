@@ -6,21 +6,11 @@
 /*   By: yez-zain <yez-zain@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/10 17:47:34 by yez-zain          #+#    #+#             */
-/*   Updated: 2022/05/10 21:17:37 by yez-zain         ###   ########.fr       */
+/*   Updated: 2022/05/15 00:49:19 by yez-zain         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "base64.h"
-
-static int	get_base_index(char c)
-{
-	int	i;
-
-	i = 0;
-	while (i < 64 && g_base[i] != c)
-		++i;
-	return (i);
-}
 
 static int	read_valid_block(int fd, char *block_buff, int block_size)
 {
@@ -81,11 +71,10 @@ static uint32_t	get_decoded_data(const char *buff)
 				|| (ft_strchr(g_base, buff[i]) == NULL
 					&& ft_strchr("\t\n\v\f\r ", buff[i]) == NULL
 					&& buff[i] != '=')))
-		{
-			write(2, "Invalid character in input stream.\n", 35);
-			return (-1);
-		}
-		c = get_base_index(buff[i]);
+			return (-write(2, "Invalid character in input stream.\n", 35));
+		c = 0;
+		while (c < 64 && g_base[i] != buff[i])
+			++c;
 		if (c > 0 && c < 64)
 			data |= c;
 		if (i < 3)
@@ -95,20 +84,60 @@ static uint32_t	get_decoded_data(const char *buff)
 	return (data);
 }
 
-int	decode(t_base64_context *ctx)
+char	*decode(t_base64_context *ctx)
 {
 	char		buff[5];
 	uint32_t	data;
 	int			i;
+	char		*res;
+	char		tmp[4];
 
+	res = NULL;
 	while (read_valid_block(ctx->input_fd, buff, 4) > 0)
 	{
 		data = get_decoded_data(buff);
 		if (data < 0)
-			return (1);
+		{
+			free(res);
+			return (NULL);
+		}
 		i = 2;
 		while (i >= get_complement_number(buff, 4))
-			write(ctx->output_fd, ((char *)&data) + i--, 1);
+		{
+			ft_memset(tmp + (2 - i), ((char *)&data)[i], 1);
+			i--;
+		}
+		tmp[2 - i] = '\0';
+		res = ft_strjoin(res, tmp, 1);
 	}
-	return (0);
+	return (res);
+}
+
+char	*decode_str(const char *str)
+{
+	uint32_t	data;
+	int			i;
+	char		*res;
+	char		tmp[4];
+	int			len;
+
+	res = NULL;
+	len = ft_strlen(str);
+	while (len > 0)
+	{
+		data = get_decoded_data(str);
+		if (data < 0)
+			return (free(res), NULL);
+		i = 2;
+		ft_memset(tmp, 0, 4);
+		while (i >= get_complement_number(str, min(len, 4)))
+		{
+			ft_memset(tmp + (2 - i), ((char *)&data)[i], 1);
+			i--;
+		}
+		res = ft_strjoin(res, tmp, 1);
+		len -= 4;
+		str += 4;
+	}
+	return (res);
 }
