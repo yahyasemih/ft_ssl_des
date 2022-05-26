@@ -6,7 +6,7 @@
 /*   By: yez-zain <yez-zain@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/15 22:42:20 by yez-zain          #+#    #+#             */
-/*   Updated: 2022/05/15 22:44:41 by yez-zain         ###   ########.fr       */
+/*   Updated: 2022/05/16 11:22:37 by yez-zain         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,6 @@ void	init(uint64_t *data, t_des_processing_context *pr_ctx,
 	int	i;
 
 	ft_memset(pr_ctx, 0, sizeof(t_des_processing_context));
-	swap_bytes(data, sizeof(uint64_t));
 	pr_ctx->m = 0;
 	i = 0;
 	while (i < 64)

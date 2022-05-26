@@ -6,7 +6,7 @@
 /*   By: yez-zain <yez-zain@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/10 22:26:25 by yez-zain          #+#    #+#             */
-/*   Updated: 2022/05/15 22:45:16 by yez-zain         ###   ########.fr       */
+/*   Updated: 2022/05/18 20:20:54 by yez-zain         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,8 +62,10 @@ static int	ecb_process(t_des_context *ctx)
 	uint64_t	block;
 	char		*res;
 	char		tmp[9];
+	int			total_len;
 
 	r = 1;
+	total_len = 0;
 	old_r = 1337;
 	res = NULL;
 	ft_memset(tmp, 0, 9);
@@ -73,13 +75,15 @@ static int	ecb_process(t_des_context *ctx)
 		if (old_r < 8 && r == 0)
 			break ;
 		old_r = padding_data(&block, r);
+		swap_bytes(&block, sizeof(uint64_t));
 		ecb_process_block(ctx, &block);
 		swap_bytes(&block, 8);
+		total_len += 8;
 		res = ft_strjoin(res, ft_memcpy(tmp, &block, sizeof(uint64_t)), 1);
 	}
 	if (ctx->is_base64 && ctx->mode == 'e')
 		res = encode_str(res);
-	write(ctx->output_fd, res, ft_strlen(res));
+	write(ctx->output_fd, res, total_len);
 	return (r < 0 || res == NULL);
 }
 

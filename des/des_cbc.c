@@ -6,7 +6,7 @@
 /*   By: yez-zain <yez-zain@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/10 22:26:25 by yez-zain          #+#    #+#             */
-/*   Updated: 2022/05/15 22:47:53 by yez-zain         ###   ########.fr       */
+/*   Updated: 2022/05/18 20:20:48 by yez-zain         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,24 +62,43 @@ static int	cbc_process(t_des_context *ctx)
 	uint64_t	block;
 	char		*res;
 	char		tmp[9];
+	uint64_t	prev;
+	uint64_t	curr;
+	int			total_len;
 
 	r = 1;
+	total_len = 0;
 	old_r = 1337;
 	res = NULL;
 	ft_memset(tmp, 0, 9);
+	prev = hex_str_to_int(ctx->iv, ft_strlen(ctx->iv));
 	while (r > 0)
 	{
 		r = ft_read_block(ctx->input_fd, (char *)&block, sizeof(uint64_t));
 		if (old_r < 8 && r == 0)
 			break ;
 		old_r = padding_data(&block, r);
-		cbc_process_block(ctx, &block);
+		swap_bytes(&block, sizeof(uint64_t));
+		if (ctx->mode == 'e')
+		{
+			block ^= prev;
+			cbc_process_block(ctx, &block);
+			prev = block;
+		}
+		else
+		{
+			curr = block;
+			cbc_process_block(ctx, &block);
+			block ^= prev;
+			prev = curr;
+		}
 		swap_bytes(&block, 8);
 		res = ft_strjoin(res, ft_memcpy(tmp, &block, sizeof(uint64_t)), 1);
+		total_len += 8;
 	}
 	if (ctx->is_base64 && ctx->mode == 'e')
 		res = encode_str(res);
-	write(ctx->output_fd, res, ft_strlen(res));
+	write(ctx->output_fd, res, total_len);
 	return (r < 0 || res == NULL);
 }
 

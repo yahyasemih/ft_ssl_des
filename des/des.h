@@ -6,7 +6,7 @@
 /*   By: yez-zain <yez-zain@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/12 21:00:27 by yez-zain          #+#    #+#             */
-/*   Updated: 2022/05/15 22:41:01 by yez-zain         ###   ########.fr       */
+/*   Updated: 2022/05/15 23:58:08 by yez-zain         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -151,6 +151,7 @@ typedef struct s_des_processing_context
 	uint32_t	f;
 	uint64_t	pre_out;
 	uint64_t	expanded;
+	uint16_t	iv;
 }	t_des_processing_context;
 
 int		handle_option_param(t_des_context *ctx, char opt, const char *arg);
