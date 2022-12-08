@@ -40,51 +40,52 @@ static void	ecb_process_block(t_des_context *ctx, uint64_t *data)
 	}
 }
 
-static int	padding_data(uint64_t *data, int len)
+static int	ecb_process_block_loop(t_des_context *ctx, char **res,
+		uint64_t *block, int *total_len)
 {
-	int	i;
+	char		buffer[9];
+	int			r;
+	int			old_r;
 
-	if (len == 8)
-		return (8);
-	i = len;
-	while (i < 8)
+	r = 1;
+	old_r = 1337;
+	ft_memset(buffer, 0, 9);
+	while (r > 0)
 	{
-		ft_memset(((char *)data) + i, 8 - len, 1);
-		++i;
+		r = ft_read_block(ctx->input_fd, (char *)block, sizeof(uint64_t));
+		if (old_r < 8 && r == 0 && ctx->mode == 'e')
+			break ;
+		old_r = padding_data(block, r);
+		swap_bytes(block, sizeof(uint64_t));
+		ecb_process_block(ctx, block);
+		swap_bytes(block, sizeof(uint64_t));
+		if ((int)((*block >> 56) & 0xffll) <= 8 && ctx->mode == 'd')
+			old_r = 8 - (int)((*block >> 56) & 0xffll);
+		*total_len += 8 * (ctx->mode == 'e') + old_r * (ctx->mode == 'd');
+		*res = ft_strjoin(*res, ft_memcpy(buffer, block, 8), 8, 1);
+		if (old_r < 8 && ctx->mode == 'd')
+			break ;
 	}
-	return (len);
+	return (r);
 }
 
 static int	ecb_process(t_des_context *ctx)
 {
 	int			r;
-	int			old_r;
 	uint64_t	block;
 	char		*res;
-	char		tmp[9];
 	int			total_len;
 
-	r = 1;
 	total_len = 0;
-	old_r = 1337;
 	res = NULL;
-	ft_memset(tmp, 0, 9);
-	while (r > 0)
-	{
-		r = ft_read_block(ctx->input_fd, (char *)&block, sizeof(uint64_t));
-		if (old_r < 8 && r == 0)
-			break ;
-		old_r = padding_data(&block, r);
-		swap_bytes(&block, sizeof(uint64_t));
-		ecb_process_block(ctx, &block);
-		swap_bytes(&block, 8);
-		total_len += 8;
-		res = ft_strjoin(res, ft_memcpy(tmp, &block, sizeof(uint64_t)), 1);
-	}
+	r = ecb_process_block_loop(ctx, &res, &block, &total_len);
 	if (ctx->is_base64 && ctx->mode == 'e')
 		res = encode_str(res);
 	write(ctx->output_fd, res, total_len);
-	return (r < 0 || res == NULL);
+	r = (r < 0 || res == NULL);
+	if (res != NULL)
+		free(res);
+	return (r);
 }
 
 int	des_ecb(int argc, char *argv[])

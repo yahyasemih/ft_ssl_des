@@ -15,6 +15,6 @@
 
 # include <stdlib.h>
 
-char	*ft_strjoin(const char *s1, const char *s2, int free_first);
+char	*ft_strjoin(const char *s1, const char *s2, int n, int free_first);
 
 #endif

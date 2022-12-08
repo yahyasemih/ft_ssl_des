@@ -40,66 +40,76 @@ static void	cbc_process_block(t_des_context *ctx, uint64_t *data)
 	}
 }
 
-static int	padding_data(uint64_t *data, int len)
+static void	cbc_encode_decode_block(t_des_context *ctx, uint64_t *block,
+		uint64_t *prev, uint64_t *curr)
 {
-	int	i;
-
-	if (len == 8)
-		return (8);
-	i = len;
-	while (i < 8)
+	swap_bytes(block, sizeof(uint64_t));
+	if (ctx->mode == 'e')
 	{
-		ft_memset(((char *)data) + i, 8 - len, 1);
-		++i;
+		*block ^= *prev;
+		cbc_process_block(ctx, block);
+		*prev = *block;
 	}
-	return (len);
+	else
+	{
+		*curr = *block;
+		cbc_process_block(ctx, block);
+		*block ^= *prev;
+		*prev = *curr;
+	}
+	swap_bytes(block, sizeof(uint64_t));
+}
+
+static int	cbc_process_loop(t_des_context *ctx, char **res, uint64_t *block,
+		int *total_len)
+{
+	int			r;
+	int			old_r;
+	char		buffer[9];
+	uint64_t	prev;
+	uint64_t	curr;
+
+	r = 1;
+	ft_memset(buffer, 0, 9);
+	old_r = 1337;
+	prev = hex_str_to_int(ctx->iv, (int)ft_strlen(ctx->iv));
+	while (r > 0)
+	{
+		r = ft_read_block(ctx->input_fd, (char *)block, sizeof(uint64_t));
+		if (old_r < 8 && r == 0 && ctx->mode == 'e')
+			break ;
+		old_r = padding_data(block, r);
+		cbc_encode_decode_block(ctx, block, &prev, &curr);
+		if ((int)((*block >> 56) & 0xffll) <= 8 && ctx->mode == 'd')
+			old_r = 8 - (int)((*block >> 56) & 0xffll);
+		*res = ft_strjoin(*res, ft_memcpy(buffer, block, 8), 8, 1);
+		*total_len += 8 * (ctx->mode == 'e') + old_r * (ctx->mode == 'd');
+		if (old_r < 8 && ctx->mode == 'd')
+			break ;
+	}
+	return (r);
 }
 
 static int	cbc_process(t_des_context *ctx)
 {
 	int			r;
-	int			old_r;
-	uint64_t	block;
 	char		*res;
-	char		tmp[9];
-	uint64_t	prev;
-	uint64_t	curr;
 	int			total_len;
+	uint64_t	block;
 
-	r = 1;
 	total_len = 0;
-	old_r = 1337;
-	res = NULL;
-	ft_memset(tmp, 0, 9);
-	prev = hex_str_to_int(ctx->iv, ft_strlen(ctx->iv));
-	while (r > 0)
-	{
-		r = ft_read_block(ctx->input_fd, (char *)&block, sizeof(uint64_t));
-		if (old_r < 8 && r == 0)
-			break ;
-		old_r = padding_data(&block, r);
-		swap_bytes(&block, sizeof(uint64_t));
-		if (ctx->mode == 'e')
-		{
-			block ^= prev;
-			cbc_process_block(ctx, &block);
-			prev = block;
-		}
-		else
-		{
-			curr = block;
-			cbc_process_block(ctx, &block);
-			block ^= prev;
-			prev = curr;
-		}
-		swap_bytes(&block, 8);
-		res = ft_strjoin(res, ft_memcpy(tmp, &block, sizeof(uint64_t)), 1);
-		total_len += 8;
-	}
+	res = malloc(sizeof(char));
+	if (res == NULL)
+		return (1);
+	res[0] = '\0';
+	r = cbc_process_loop(ctx, &res, &block, &total_len);
 	if (ctx->is_base64 && ctx->mode == 'e')
 		res = encode_str(res);
 	write(ctx->output_fd, res, total_len);
-	return (r < 0 || res == NULL);
+	r = (r < 0 || res == NULL);
+	if (res != NULL)
+		free(res);
+	return (r);
 }
 
 int	des_cbc(int argc, char *argv[])

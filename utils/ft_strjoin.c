@@ -13,7 +13,7 @@
 #include "ft_strjoin.h"
 #include "libc_utils.h"
 
-char	*ft_strjoin(const char *s1, const char *s2, int free_first)
+char	*ft_strjoin(const char *s1, const char *s2, int n, int free_first)
 {
 	char	*res;
 	int		len;
@@ -21,11 +21,9 @@ char	*ft_strjoin(const char *s1, const char *s2, int free_first)
 	int		len2;
 
 	len1 = 0;
-	len2 = 0;
+	len2 = n;
 	if (s1 != NULL)
 		len1 = ft_strlen(s1);
-	if (s2 != NULL)
-		len2 = ft_strlen(s2);
 	len = len1 + len2;
 	res = malloc(sizeof(char) *(len + 1));
 	if (res == NULL)

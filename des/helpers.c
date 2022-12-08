@@ -77,3 +77,18 @@ void	handle_options_with_no_param(t_des_context *ctx, char opt)
 	else if (opt == 'a')
 		ctx->is_base64 = 1;
 }
+
+int	padding_data(uint64_t *data, int len)
+{
+	int	i;
+
+	if (len == 8)
+		return (8);
+	i = len;
+	while (i < 8)
+	{
+		ft_memset(((char *)data) + i, 8 - len, 1);
+		++i;
+	}
+	return (len);
+}

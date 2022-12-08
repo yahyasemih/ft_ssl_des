@@ -55,7 +55,7 @@ char	*encode(t_base64_context *ctx)
 		if (r <= 0)
 			break ;
 		tmp = encode_block(buff, r);
-		res = ft_strjoin(res, tmp, 1);
+		res = ft_strjoin(res, tmp, ft_strlen(tmp), 1);
 		free(tmp);
 		if (tmp == NULL)
 			return (NULL);
@@ -65,7 +65,7 @@ char	*encode(t_base64_context *ctx)
 		free(res);
 		return (NULL);
 	}
-	res = ft_strjoin(res, "\n", 1);
+	res = ft_strjoin(res, "\n", 1, 1);
 	return (res);
 }
 
@@ -85,13 +85,13 @@ char	*encode_str(const char *str)
 			tmp = encode_block((const unsigned char *)str + i, 3);
 		else
 			tmp = encode_block((const unsigned char *)str + i, len - i);
-		res = ft_strjoin(res, tmp, 1);
+		res = ft_strjoin(res, tmp, ft_strlen(tmp), 1);
 		free(tmp);
 		if (tmp == NULL)
 			return (NULL);
 		i += 3;
 	}
 	free((char *)str);
-	res = ft_strjoin(res, "\n", 1);
+	res = ft_strjoin(res, "\n", 1, 1);
 	return (res);
 }

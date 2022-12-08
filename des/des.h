@@ -162,4 +162,6 @@ void	init_ctx(t_des_context *ctx);
 
 int		open_files(t_des_context *ctx, char mode, const char *file);
 
+int		padding_data(uint64_t *data, int len);
+
 #endif
