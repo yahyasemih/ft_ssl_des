@@ -13,11 +13,16 @@
 #ifndef DES_H
 # define DES_H
 
+# include <stdint.h>
 # include <fcntl.h>
 # include <stdlib.h>
 # include <pwd.h>
 # include <unistd.h>
 # include "../utils/commands_utils.h"
+
+# ifndef _PASSWORD_LEN
+#  define _PASSWORD_LEN 128
+# endif
 
 static const char	g_init_permutation[] = {
 	58, 50, 42, 34, 26, 18, 10, 2,

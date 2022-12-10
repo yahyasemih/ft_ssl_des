@@ -13,6 +13,7 @@
 #ifndef BASE64_H
 # define BASE64_H
 
+# include <stdint.h>
 # include <unistd.h>
 # include <fcntl.h>
 # include "../utils/commands_utils.h"

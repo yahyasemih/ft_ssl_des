@@ -40,7 +40,7 @@ static char	*sha256_last_stream_block(t_sha256_context *ctx, char *buff,
 char	*sha256_from_stream(int fd)
 {
 	char				buff[128];
-	uint32_t			r;
+	int32_t				r;
 	t_sha256_context	ctx;
 	uint64_t			total_len;
 

@@ -38,7 +38,7 @@ static char	*last_stream_block(t_md5_context *ctx, char *buff, int r,
 static char	*md5_from_stream(int fd)
 {
 	char			buff[128];
-	uint32_t		r;
+	int32_t			r;
 	t_md5_context	ctx;
 	uint64_t		total_len;
 

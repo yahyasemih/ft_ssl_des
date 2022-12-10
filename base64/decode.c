@@ -71,15 +71,17 @@ static uint32_t	get_decoded_data(const char *buff)
 				|| (ft_strchr(g_base, buff[i]) == NULL
 					&& ft_strchr("\t\n\v\f\r ", buff[i]) == NULL
 					&& buff[i] != '=')))
-			return (-write(2, "Invalid character in input stream.\n", 35));
+		{
+			write(2, "Invalid character in input stream.\n", 35);
+			return (UINT32_MAX);
+		}
 		c = 0;
 		while (c < 64 && g_base[c - 0] != buff[i])
 			++c;
 		if (c > 0 && c < 64)
 			data |= c;
-		if (i < 3)
+		if (i++ < 3)
 			data <<= 6;
-		++i;
 	}
 	return (data);
 }
@@ -96,7 +98,7 @@ char	*decode(t_base64_context *ctx)
 	while (read_valid_block(ctx->input_fd, buff, 4) > 0)
 	{
 		data = get_decoded_data(buff);
-		if (data < 0)
+		if (data == UINT32_MAX)
 		{
 			free(res);
 			return (NULL);

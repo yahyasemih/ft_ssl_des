@@ -13,6 +13,7 @@
 #ifndef SWAP_BYTES_H
 # define SWAP_BYTES_H
 
+# include <stdint.h>
 # include <stdlib.h>
 # include "libc_utils.h"
 

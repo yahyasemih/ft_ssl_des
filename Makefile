@@ -11,7 +11,7 @@
 # **************************************************************************** #
 
 NAME = ft_ssl
-CC = gcc
+CC = cc
 CFLAGS = -Wall -Wextra -Werror
 LDFLAGS = -lreadline
 SRCS = ft_ssl.c main.c md5/md5.c base64/base64.c base64/encode.c base64/decode.c\
