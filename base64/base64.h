@@ -33,6 +33,7 @@ static const char	*g_base = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
 char	*encode(t_base64_context *ctx);
 char	*encode_str(const char *str);
 char	*decode(t_base64_context *ctx);
+char	*decode_str(const char *str);
 int		base64(int argc, char *argv[]);
 
 #endif

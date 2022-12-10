@@ -114,3 +114,32 @@ char	*decode(t_base64_context *ctx)
 	}
 	return (res);
 }
+
+char	*decode_str(const char *str)
+{
+	uint32_t	data;
+	int			i;
+	char		*res;
+	char		tmp[4];
+	int			len;
+
+	res = NULL;
+	len = ft_strlen(str);
+	while (len > 0)
+	{
+		data = get_decoded_data(str);
+		if (data < 0)
+			return (free(res), NULL);
+		i = 2;
+		ft_memset(tmp, 0, 4);
+		while (i >= get_complement_number(str, min(len, 4)))
+		{
+			ft_memset(tmp + (2 - i), ((char *)&data)[i], 1);
+			i--;
+		}
+		res = ft_strjoin(res, tmp, ft_strlen(tmp), 1);
+		len -= 4;
+		str += 4;
+	}
+	return (res);
+}

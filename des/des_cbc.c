@@ -102,9 +102,13 @@ static int	cbc_process(t_des_context *ctx)
 	if (res == NULL)
 		return (1);
 	res[0] = '\0';
+	//TODO: decode string before decrypt if -a option is provided
 	r = cbc_process_loop(ctx, &res, &block, &total_len);
 	if (ctx->is_base64 && ctx->mode == 'e')
+	{
 		res = encode_str(res);
+		total_len = ((total_len / 3) + ((total_len / 3) % 3 != 0)) * 4 + 1;
+	}
 	write(ctx->output_fd, res, total_len);
 	r = (r < 0 || res == NULL);
 	if (res != NULL)
