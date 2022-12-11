@@ -28,7 +28,7 @@ uint64_t	hex_str_to_int(const char *str, int len)
 			r |= (str[i] - '0');
 		else if (str[i] >= 'A' && str[i] <= 'F')
 			r |= (str[i] - 'A') + 10;
-		else if (str[i] >= 'f' && str[i] <= 'f')
+		else if (str[i] >= 'a' && str[i] <= 'f')
 			r |= (str[i] - 'a') + 10;
 		++i;
 	}
