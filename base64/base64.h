@@ -6,7 +6,7 @@
 /*   By: yez-zain <yez-zain@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/09 21:27:27 by yez-zain          #+#    #+#             */
-/*   Updated: 2022/05/14 22:24:23 by yez-zain         ###   ########.fr       */
+/*   Updated: 2022/12/14 15:43:36 by yez-zain         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,9 +16,9 @@
 # include <stdint.h>
 # include <unistd.h>
 # include <fcntl.h>
-# include "../utils/commands_utils.h"
-# include "../utils/ft_read_block.h"
-# include "../utils/ft_strjoin.h"
+# include "utils/commands_utils.h"
+# include "utils/ft_read_block.h"
+# include "utils/ft_strjoin.h"
 
 typedef struct s_base64_context
 {

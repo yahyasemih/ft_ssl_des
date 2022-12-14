@@ -6,15 +6,16 @@
 /*   By: yez-zain <yez-zain@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/12 04:06:49 by yez-zain          #+#    #+#             */
-/*   Updated: 2022/12/14 14:53:01 by yez-zain         ###   ########.fr       */
+/*   Updated: 2022/12/14 15:43:36 by yez-zain         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "des.h"
-#include "../sha256/string_operations.h"
-#include "../utils/hex_str_to_int.h"
-#include "../utils/int_to_hex_str.h"
-#include "../utils/ft_strjoin.h"
+#include "sha256/string_operations.h"
+#include "utils/hex_str_to_int.h"
+#include "utils/int_to_hex_str.h"
+#include "utils/ft_strjoin.h"
+#include "utils/get_password.h"
 
 static char	*do_hmac(const char *inner_pad, const char *outer_pad,
 		const char *message, size_t message_len)
@@ -115,21 +116,14 @@ static void	derivation_process(t_des_context *ctx, char *salt, size_t salt_len)
 
 void	make_key_from_password(t_des_context *ctx, const char *prompt)
 {
-	char		*pass;
 	char		tmp[17];
 	char		final_salt[12];
 	uint64_t	salt_data;
 	uint64_t	key_data;
 
-	if (ctx->passwd[0] == '\0')
-	{
-		pass = getpass(prompt);
-		if (pass == NULL)
-			return ;
-		ft_memcpy(ctx->passwd, pass, min(ft_strlen(pass), _PASSWORD_LEN) + 1);
-		free(pass);
-	}
-	if (ctx->salt[0] == '\0')
+	if (!ctx->passwd[0] && get_password(prompt, ctx->passwd, _PASSWORD_LEN))
+		return ;
+	if (!ctx->salt[0])
 		generate_salt(ctx);
 	salt_data = hex_str_to_int(ctx->salt, 16);
 	swap_bytes(&salt_data, sizeof(uint64_t));
@@ -140,4 +134,10 @@ void	make_key_from_password(t_des_context *ctx, const char *prompt)
 	int_to_hex_str(key_data, tmp);
 	tmp[16] = '\0';
 	ft_memcpy(ctx->key, tmp, 16);
+	write(1, "salt=", 5);
+	write(1, ctx->salt, 16);
+	write(1, "\n", 1);
+	write(1, "key=", 4);
+	write(1, ctx->key, 16);
+	write(1, "\n", 1);
 }

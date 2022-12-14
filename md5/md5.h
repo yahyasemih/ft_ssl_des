@@ -6,7 +6,7 @@
 /*   By: yez-zain <yez-zain@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/09 21:19:26 by yez-zain          #+#    #+#             */
-/*   Updated: 2022/05/11 16:13:36 by yez-zain         ###   ########.fr       */
+/*   Updated: 2022/12/14 15:43:36 by yez-zain         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,10 +16,10 @@
 # include <stdint.h>
 # include <unistd.h>
 # include <fcntl.h>
-# include "../utils/commands_utils.h"
-# include "../utils/ft_read_block.h"
-# include "../utils/libc_utils.h"
-# include "../utils/write_in_hex.h"
+# include "utils/commands_utils.h"
+# include "utils/ft_read_block.h"
+# include "utils/libc_utils.h"
+# include "utils/write_in_hex.h"
 
 # define F_QUIET 0x1
 # define F_REVERSE 0x2

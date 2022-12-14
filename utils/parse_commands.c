@@ -6,13 +6,13 @@
 /*   By: yez-zain <yez-zain@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/11 18:02:03 by yez-zain          #+#    #+#             */
-/*   Updated: 2022/05/11 19:05:00 by yez-zain         ###   ########.fr       */
+/*   Updated: 2022/12/14 15:43:36 by yez-zain         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <readline/readline.h>
 #include <readline/history.h>
-#include "../ft_ssl.h"
+#include "ft_ssl.h"
 
 static int	arg_count(const char *line)
 {

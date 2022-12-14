@@ -6,7 +6,7 @@
 /*   By: yez-zain <yez-zain@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/12 21:00:27 by yez-zain          #+#    #+#             */
-/*   Updated: 2022/12/14 14:52:08 by yez-zain         ###   ########.fr       */
+/*   Updated: 2022/12/14 15:43:36 by yez-zain         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@
 # include <stdlib.h>
 # include <pwd.h>
 # include <unistd.h>
-# include "../utils/commands_utils.h"
+# include "utils/commands_utils.h"
 
 # ifndef _PASSWORD_LEN
 #  define _PASSWORD_LEN 128

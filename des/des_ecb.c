@@ -6,13 +6,13 @@
 /*   By: yez-zain <yez-zain@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/10 22:26:25 by yez-zain          #+#    #+#             */
-/*   Updated: 2022/12/14 11:06:58 by yez-zain         ###   ########.fr       */
+/*   Updated: 2022/12/14 15:43:36 by yez-zain         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "des_ecb.h"
 #include "des_routines.h"
-#include "../base64/base64.h"
+#include "base64/base64.h"
 
 static void	ecb_process_block(t_des_context *ctx, uint64_t *data)
 {
@@ -76,6 +76,8 @@ static int	ecb_process(t_des_context *ctx)
 	char		*res;
 	int			total_len;
 
+	if (ctx->key[0] == '\0')
+		return (1);
 	total_len = 0;
 	res = NULL;
 	//TODO: decode string before decrypt if -a option is provided
