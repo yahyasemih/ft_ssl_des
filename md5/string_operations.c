@@ -6,7 +6,7 @@
 /*   By: yez-zain <yez-zain@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/11 14:28:47 by yez-zain          #+#    #+#             */
-/*   Updated: 2022/05/11 19:13:16 by yez-zain         ###   ########.fr       */
+/*   Updated: 2022/12/14 12:28:38 by yez-zain         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,14 +36,14 @@ char	*fill_result(t_md5_context *ctx, char *str)
 	return (str);
 }
 
-char	*prepare_input_string(const char *str)
+char	*prepare_input_string(const char *str, uint64_t len)
 {
 	char		*s;
 	int			r;
 	int			new_len;
 	uint64_t	bits_len;
 
-	r = ft_strlen(str);
+	r = len;
 	new_len = ((((r + 8) / 64) + 1) * 64) - 8;
 	s = malloc(new_len + 8);
 	if (s == NULL)
@@ -98,7 +98,7 @@ char	*md5_from_string(const char *str, uint64_t len)
 	ctx.h[2] = 0x98BADCFE;
 	ctx.h[3] = 0x10325476;
 	offset = 0;
-	padded_str = prepare_input_string(str);
+	padded_str = prepare_input_string(str, len);
 	if (padded_str == NULL)
 		return (NULL);
 	while (offset < len)
@@ -106,11 +106,9 @@ char	*md5_from_string(const char *str, uint64_t len)
 		process_block((uint32_t *)(padded_str + offset), &ctx);
 		offset += 64;
 	}
+	free(padded_str);
 	s = malloc(17 * sizeof(char));
 	if (s == NULL)
-	{
-		free(padded_str);
 		return (NULL);
-	}
 	return (fill_result(&ctx, s));
 }

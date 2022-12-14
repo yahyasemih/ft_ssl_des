@@ -6,7 +6,7 @@
 /*   By: yez-zain <yez-zain@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/11 16:22:58 by yez-zain          #+#    #+#             */
-/*   Updated: 2022/05/11 16:28:46 by yez-zain         ###   ########.fr       */
+/*   Updated: 2022/12/14 11:31:12 by yez-zain         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 
 # include "sha256.h"
 
-char	*sha256_prepare_input_string(const char *str);
+char	*sha256_prepare_input_string(const char *str, uint64_t len);
 
 void	sha256_print_result(uint32_t flags, const char *s, const char *src,
 			int src_len);

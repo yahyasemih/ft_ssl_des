@@ -6,21 +6,21 @@
 /*   By: yez-zain <yez-zain@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/11 16:25:54 by yez-zain          #+#    #+#             */
-/*   Updated: 2022/05/11 16:40:35 by yez-zain         ###   ########.fr       */
+/*   Updated: 2022/12/14 12:23:43 by yez-zain         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "string_operations.h"
 #include "state_operations.h"
 
-char	*sha256_prepare_input_string(const char *str)
+char	*sha256_prepare_input_string(const char *str, uint64_t len)
 {
 	char		*s;
 	int			r;
 	int			new_len;
 	uint64_t	bits_len;
 
-	r = ft_strlen(str);
+	r = len;
 	new_len = ((((r + 8) / 64) + 1) * 64) - 8;
 	s = malloc(new_len + 8);
 	if (s == NULL)
@@ -111,7 +111,7 @@ char	*sha256_from_string(const char *str, uint64_t len)
 
 	sha256_init_ctx(&ctx);
 	i = 0;
-	padded_str = sha256_prepare_input_string(str);
+	padded_str = sha256_prepare_input_string(str, len);
 	if (padded_str == NULL)
 		return (NULL);
 	while (i < len)
@@ -127,5 +127,6 @@ char	*sha256_from_string(const char *str, uint64_t len)
 		sha256_block_iteration(&ctx);
 		i += 64;
 	}
+	free(padded_str);
 	return (sha256_fill_result(&ctx, malloc(33 * sizeof(char)), 8));
 }
