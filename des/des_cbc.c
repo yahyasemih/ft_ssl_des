@@ -6,7 +6,7 @@
 /*   By: yez-zain <yez-zain@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/10 22:26:25 by yez-zain          #+#    #+#             */
-/*   Updated: 2022/05/18 20:20:48 by yez-zain         ###   ########.fr       */
+/*   Updated: 2022/12/14 15:01:01 by yez-zain         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -139,5 +139,7 @@ int	des_cbc(int argc, char *argv[])
 				return (invalid_option(argv[0], argv[i][1]));
 		}
 	}
+	if (ctx.key[0] == '\0')
+		make_key_from_password(&ctx, "enter DES-CBC encryption password:");
 	return (cbc_process(&ctx));
 }

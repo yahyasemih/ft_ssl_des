@@ -6,7 +6,7 @@
 /*   By: yez-zain <yez-zain@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/10 22:26:25 by yez-zain          #+#    #+#             */
-/*   Updated: 2022/05/18 20:20:54 by yez-zain         ###   ########.fr       */
+/*   Updated: 2022/12/14 11:06:58 by yez-zain         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -115,5 +115,7 @@ int	des_ecb(int argc, char *argv[])
 				return (invalid_option(argv[0], argv[i][1]));
 		}
 	}
+	if (ctx.key[0] == '\0')
+		make_key_from_password(&ctx, "enter DES-ECB encryption password:");
 	return (ecb_process(&ctx));
 }

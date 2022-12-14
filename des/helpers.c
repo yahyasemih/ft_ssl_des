@@ -6,7 +6,7 @@
 /*   By: yez-zain <yez-zain@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/12 23:37:26 by yez-zain          #+#    #+#             */
-/*   Updated: 2022/05/15 00:48:27 by yez-zain         ###   ########.fr       */
+/*   Updated: 2022/12/14 14:16:14 by yez-zain         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,7 @@ int	open_files(t_des_context *ctx, char mode, const char *file)
 	}
 	else
 	{
-		ctx->output_fd = open(file, O_WRONLY | O_CREAT, 0644);
+		ctx->output_fd = open(file, O_WRONLY | O_CREAT | O_TRUNC, 0644);
 		if (ctx->output_fd < 0)
 			write(2, "des-ecb: Error: unable to open output file: ", 44);
 	}

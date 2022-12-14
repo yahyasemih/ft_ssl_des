@@ -6,7 +6,7 @@
 /*   By: yez-zain <yez-zain@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/12 21:00:27 by yez-zain          #+#    #+#             */
-/*   Updated: 2022/05/15 23:58:08 by yez-zain         ###   ########.fr       */
+/*   Updated: 2022/12/14 14:52:08 by yez-zain         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -168,5 +168,7 @@ void	init_ctx(t_des_context *ctx);
 int		open_files(t_des_context *ctx, char mode, const char *file);
 
 int		padding_data(uint64_t *data, int len);
+
+void	make_key_from_password(t_des_context *ctx, const char *prompt);
 
 #endif
