@@ -6,7 +6,7 @@
 /*   By: yez-zain <yez-zain@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/10 22:26:25 by yez-zain          #+#    #+#             */
-/*   Updated: 2022/12/14 16:31:08 by yez-zain         ###   ########.fr       */
+/*   Updated: 2022/12/14 17:50:32 by yez-zain         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -99,7 +99,7 @@ static int	cbc_process(t_des_context *ctx)
 	uint64_t	block;
 	int			fd;
 
-	if (ctx->key[0] == '\0')
+	if (ctx->key[0] == '\0' || ctx->iv[0] == '\0')
 		return (1);
 	total_len = 0;
 	res = ft_strjoin("", "", 0, 0);
@@ -129,21 +129,22 @@ int	des_cbc(int argc, char *argv[])
 	i = 0;
 	while (++i < argc)
 	{
-		if (argv[i][0] == '-')
+		if (argv[i][0] != '-')
+			continue ;
+		if (ft_strchr("iokspv", argv[i][1]) != NULL)
 		{
-			if (ft_strchr("iokspv", argv[i][1]) != NULL)
-			{
-				if (handle_option_param(&ctx, argv[i][1], argv[i + 1]))
-					return (1);
-				++i;
-			}
-			else if (ft_strchr("ade", argv[i][1]) != NULL)
-				handle_options_with_no_param(&ctx, argv[i][1]);
-			else
-				return (invalid_option(argv[0], argv[i][1]));
+			if (handle_option_param(&ctx, argv[i][1], argv[i + 1]))
+				return (1);
+			++i;
 		}
+		else if (ft_strchr("ade", argv[i][1]) != NULL)
+			handle_options_with_no_param(&ctx, argv[i][1]);
+		else
+			return (invalid_option(argv[0], argv[i][1]));
 	}
 	if (ctx.key[0] == '\0')
 		make_key_from_password(&ctx, "enter DES-CBC encryption password:");
+	if (ctx.iv[0] == '\0')
+		write(2, "iv undefined\n", 13);
 	return (cbc_process(&ctx));
 }

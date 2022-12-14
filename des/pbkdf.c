@@ -6,7 +6,7 @@
 /*   By: yez-zain <yez-zain@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/12 04:06:49 by yez-zain          #+#    #+#             */
-/*   Updated: 2022/12/14 15:43:36 by yez-zain         ###   ########.fr       */
+/*   Updated: 2022/12/14 18:16:25 by yez-zain         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -89,23 +89,27 @@ static void	generate_salt(t_des_context *ctx)
 	close(fd);
 }
 
-static void	derivation_process(t_des_context *ctx, char *salt, size_t salt_len)
+static void	derivation_process(t_des_context *ctx, uint64_t salt_data)
 {
 	char		*generated_key;
 	char		*intermediate_key;
+	char		final_salt[12];
 	int			i;
 	int			j;
 
-	generated_key = hmac_sha256(ctx->passwd, ft_strlen(ctx->passwd), salt,
-			salt_len);
-	ft_memcpy(ctx->key, generated_key, 8);
+	swap_bytes(&salt_data, sizeof(uint64_t));
+	ft_memcpy(final_salt, &salt_data, sizeof(uint64_t));
+	ft_memcpy(final_salt + sizeof(uint64_t), "\0\0\0\1", 4);
+	generated_key = hmac_sha256(ctx->passwd, ft_strlen(ctx->passwd),
+			final_salt, 12);
+	ft_memcpy(ctx->key, generated_key, 16);
 	i = 1;
 	while (i < 10000)
 	{
 		intermediate_key = hmac_sha256(ctx->passwd, ft_strlen(ctx->passwd),
 				generated_key, 32);
 		j = 0;
-		while (++j <= 8)
+		while (++j <= 16)
 			ctx->key[j - 1] ^= intermediate_key[j - 1];
 		free(generated_key);
 		generated_key = intermediate_key;
@@ -116,28 +120,28 @@ static void	derivation_process(t_des_context *ctx, char *salt, size_t salt_len)
 
 void	make_key_from_password(t_des_context *ctx, const char *prompt)
 {
-	char		tmp[17];
-	char		final_salt[12];
-	uint64_t	salt_data;
-	uint64_t	key_data;
+	char		buff[17];
+	uint64_t	data;
 
 	if (!ctx->passwd[0] && get_password(prompt, ctx->passwd, _PASSWORD_LEN))
 		return ;
 	if (!ctx->salt[0])
 		generate_salt(ctx);
-	salt_data = hex_str_to_int(ctx->salt, 16);
-	swap_bytes(&salt_data, sizeof(uint64_t));
-	ft_memcpy(final_salt, &salt_data, sizeof(uint64_t));
-	ft_memcpy(final_salt + sizeof(uint64_t), "\0\0\0\1", 4);
-	derivation_process(ctx, final_salt, 12);
-	ft_memcpy(&key_data, ctx->key, sizeof(uint64_t));
-	int_to_hex_str(key_data, tmp);
-	tmp[16] = '\0';
-	ft_memcpy(ctx->key, tmp, 16);
-	write(1, "salt=", 5);
-	write(1, ctx->salt, 16);
-	write(1, "\n", 1);
-	write(1, "key=", 4);
-	write(1, ctx->key, 16);
-	write(1, "\n", 1);
+	data = hex_str_to_int(ctx->salt, 16);
+	derivation_process(ctx, data);
+	ft_memcpy(&data, ctx->key, sizeof(uint64_t));
+	int_to_hex_str(data, buff);
+	ft_memcpy(&data, ctx->key + 8, sizeof(uint64_t));
+	ft_memcpy(ctx->key, buff, 16);
+	if (ctx->iv[0] != '\0')
+	{
+		data = hex_str_to_int(ctx->iv, ft_strlen(ctx->iv));
+		swap_bytes(&data, sizeof(uint64_t));
+	}
+	int_to_hex_str(data, buff);
+	ft_memcpy(ctx->iv, buff, 16);
+	if (write(1, "salt=", 5) && write(1, ctx->salt, 16) && write(1, "\nkey=", 5)
+		&& write(1, ctx->key, 16) && write(1, "\niv =", 5)
+		&& write(1, ctx->iv, 16))
+		write(1, "\n", 1);
 }
