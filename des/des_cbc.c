@@ -6,13 +6,14 @@
 /*   By: yez-zain <yez-zain@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/10 22:26:25 by yez-zain          #+#    #+#             */
-/*   Updated: 2022/12/14 15:43:36 by yez-zain         ###   ########.fr       */
+/*   Updated: 2022/12/14 16:31:08 by yez-zain         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "des_cbc.h"
 #include "des_routines.h"
 #include "base64/base64.h"
+#include "utils/handle_input_decode.h"
 
 static void	cbc_process_block(t_des_context *ctx, uint64_t *data)
 {
@@ -96,15 +97,14 @@ static int	cbc_process(t_des_context *ctx)
 	char		*res;
 	int			total_len;
 	uint64_t	block;
+	int			fd;
 
 	if (ctx->key[0] == '\0')
 		return (1);
 	total_len = 0;
-	res = malloc(sizeof(char));
-	if (res == NULL)
-		return (1);
-	res[0] = '\0';
-	//TODO: decode string before decrypt if -a option is provided
+	res = ft_strjoin("", "", 0, 0);
+	if (ctx->mode == 'd' && ctx->is_base64)
+		fd = handle_input_decode(ctx);
 	r = cbc_process_loop(ctx, &res, &block, &total_len);
 	if (ctx->is_base64 && ctx->mode == 'e')
 	{
@@ -115,6 +115,8 @@ static int	cbc_process(t_des_context *ctx)
 	r = (r < 0 || res == NULL);
 	if (res != NULL)
 		free(res);
+	if (ctx->mode == 'd' && ctx->is_base64)
+		ctx->input_fd = fd;
 	return (r);
 }
 

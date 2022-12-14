@@ -6,7 +6,7 @@
 #    By: yez-zain <yez-zain@student.1337.ma>        +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/05/10 17:48:29 by yez-zain          #+#    #+#              #
-#    Updated: 2022/12/14 15:43:09 by yez-zain         ###   ########.fr        #
+#    Updated: 2022/12/14 16:32:00 by yez-zain         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -21,7 +21,8 @@ SRCS = ft_ssl.c main.c md5/md5.c base64/base64.c base64/encode.c base64/decode.c
 	sha256/string_operations.c sha256/block_operations.c utils/parse_commands.c\
 	md5/block_operations.c utils/free_args.c des/des_cbc.c des/des_ecb.c\
 	des/helpers.c utils/ft_strjoin.c utils/hex_str_to_int.c utils/get_password.c\
-	utils/int_to_hex_str.c des/des_routines.c des/pbkdf.c
+	utils/handle_input_decode.c utils/int_to_hex_str.c\
+	des/des_routines.c des/pbkdf.c
 DEPS = $(SRCS:.c=.d)
 OBJECTS = $(SRCS:.c=.o)
 RED = \033[1;31m

@@ -6,13 +6,14 @@
 /*   By: yez-zain <yez-zain@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/10 22:26:25 by yez-zain          #+#    #+#             */
-/*   Updated: 2022/12/14 15:43:36 by yez-zain         ###   ########.fr       */
+/*   Updated: 2022/12/14 16:30:44 by yez-zain         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "des_ecb.h"
 #include "des_routines.h"
 #include "base64/base64.h"
+#include "utils/handle_input_decode.h"
 
 static void	ecb_process_block(t_des_context *ctx, uint64_t *data)
 {
@@ -75,12 +76,14 @@ static int	ecb_process(t_des_context *ctx)
 	uint64_t	block;
 	char		*res;
 	int			total_len;
+	int			fd;
 
 	if (ctx->key[0] == '\0')
 		return (1);
 	total_len = 0;
 	res = NULL;
-	//TODO: decode string before decrypt if -a option is provided
+	if (ctx->mode == 'd' && ctx->is_base64)
+		fd = handle_input_decode(ctx);
 	r = ecb_process_block_loop(ctx, &res, &block, &total_len);
 	if (ctx->is_base64 && ctx->mode == 'e')
 	{
@@ -91,6 +94,8 @@ static int	ecb_process(t_des_context *ctx)
 	r = (r < 0 || res == NULL);
 	if (res != NULL)
 		free(res);
+	if (ctx->mode == 'd' && ctx->is_base64)
+		ctx->input_fd = fd;
 	return (r);
 }
 
