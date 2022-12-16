@@ -24,11 +24,11 @@ int	handle_input_decode(t_des_context *ctx)
 		return (ctx->input_fd);
 	while (1)
 	{
-		r = read(ctx->input_fd, buff, 1024);
+		r = (int)read(ctx->input_fd, buff, 1024);
 		if (r <= 0)
 			break ;
 		buff[r] = '\0';
-		if (r > 0 && buff[r - 1] == '\n')
+		if (buff[r - 1] == '\n')
 			buff[r - 1] = '\0';
 		str = decode_str(buff);
 		write(fd, str, ft_strlen(str));

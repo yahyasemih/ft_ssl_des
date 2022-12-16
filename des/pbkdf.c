@@ -23,7 +23,7 @@ static char	*do_hmac(const char *inner_pad, const char *outer_pad,
 	char	*str;
 	char	*str2;
 
-	str2 = ft_strjoin(inner_pad, message, message_len, 0);
+	str2 = ft_strjoin(inner_pad, message, (int)message_len, 0);
 	str = sha256_from_string(str2, message_len + 64);
 	free(str2);
 	str2 = ft_strjoin(outer_pad, str, 32, 0);
@@ -56,8 +56,8 @@ static char	*hmac_sha256(const char *password, size_t passwd_len,
 	i = 0;
 	while (i < 64)
 	{
-		outer_pad[i] = key[i] ^ 0x5C;
-		inner_pad[i] = key[i] ^ 0x36;
+		outer_pad[i] = (char)(key[i] ^ 0x5C);
+		inner_pad[i] = (char)(key[i] ^ 0x36);
 		++i;
 	}
 	return (do_hmac(inner_pad, outer_pad, message, message_len));
@@ -110,7 +110,7 @@ static void	derivation_process(t_des_context *ctx, uint64_t salt_data)
 				generated_key, 32);
 		j = 0;
 		while (++j <= 16)
-			ctx->key[j - 1] ^= intermediate_key[j - 1];
+			ctx->key[j - 1] = (char)(ctx->key[j - 1] ^ intermediate_key[j - 1]);
 		free(generated_key);
 		generated_key = intermediate_key;
 		++i;
@@ -135,7 +135,7 @@ void	make_key_from_password(t_des_context *ctx, const char *prompt)
 	ft_memcpy(ctx->key, buff, 16);
 	if (ctx->iv[0] != '\0')
 	{
-		data = hex_str_to_int(ctx->iv, ft_strlen(ctx->iv));
+		data = hex_str_to_int(ctx->iv, (int)ft_strlen(ctx->iv));
 		swap_bytes(&data, sizeof(uint64_t));
 	}
 	int_to_hex_str(data, buff);

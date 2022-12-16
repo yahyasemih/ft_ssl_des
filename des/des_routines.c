@@ -12,7 +12,7 @@
 
 #include "des_routines.h"
 
-void	init(uint64_t *data, t_des_processing_context *pr_ctx,
+void	init(const uint64_t *data, t_des_processing_context *pr_ctx,
 	t_des_context *ctx)
 {
 	int	i;
@@ -28,7 +28,7 @@ void	init(uint64_t *data, t_des_processing_context *pr_ctx,
 	}
 	pr_ctx->l = (uint32_t)(pr_ctx->m >> 32) & 0x00000000ffffffff;
 	pr_ctx->r = (uint32_t)pr_ctx->m & 0x00000000ffffffff;
-	pr_ctx->k = hex_str_to_int(ctx->key, ft_strlen(ctx->key));
+	pr_ctx->k = hex_str_to_int(ctx->key, (int)ft_strlen(ctx->key));
 	pr_ctx->kp = 0;
 	i = 0;
 	while (i < 56)

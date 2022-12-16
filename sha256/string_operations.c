@@ -20,7 +20,7 @@ char	*sha256_prepare_input_string(const char *str, uint64_t len)
 	int			new_len;
 	uint64_t	bits_len;
 
-	r = len;
+	r = (int)len;
 	new_len = ((((r + 8) / 64) + 1) * 64) - 8;
 	s = malloc(new_len + 8);
 	if (s == NULL)
@@ -116,7 +116,7 @@ char	*sha256_from_string(const char *str, uint64_t len)
 		return (NULL);
 	while (i < len)
 	{
-		init_words_from_str(ctx.w, padded_str, i);
+		init_words_from_str(ctx.w, padded_str, (int)i);
 		t = 16;
 		while (t < 64)
 		{

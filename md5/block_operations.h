@@ -15,6 +15,4 @@
 
 # include "md5.h"
 
-void	process_block(uint32_t *bloc, t_md5_context *ctx);
-
 #endif

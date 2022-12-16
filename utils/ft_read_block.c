@@ -22,7 +22,7 @@ int	ft_read_block(int fd, char *block_buff, int block_size)
 	r = 1;
 	while (r > 0)
 	{
-		r = read(fd, block_buff + total_r, block_size - total_r);
+		r = (int)read(fd, block_buff + total_r, block_size - total_r);
 		if (r < 0)
 			return (-1);
 		total_r += r;

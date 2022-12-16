@@ -12,19 +12,19 @@
 
 #include "base64.h"
 
-static int	read_valid_block(int fd, char *block_buff, int block_size)
+static int	read_valid_block(int fd, char *block_buff)
 {
 	int		r;
 	int		total_r;
 	char	c;
 
-	ft_memset(block_buff, 0, block_size);
+	ft_memset(block_buff, 0, 4);
 	total_r = 0;
 	r = 1;
 	while (r > 0)
 	{
 		c = '\0';
-		r = read(fd, &c, 1);
+		r = (int)read(fd, &c, 1);
 		if (r < 0)
 			return (-1);
 		if (ft_strchr(g_base, c) == NULL && c != '=')
@@ -32,7 +32,7 @@ static int	read_valid_block(int fd, char *block_buff, int block_size)
 		block_buff[total_r] = c;
 		total_r += r;
 		block_buff[total_r] = '\0';
-		if (total_r == block_size)
+		if (total_r == 4)
 			break ;
 	}
 	return (total_r);
@@ -95,7 +95,7 @@ char	*decode(t_base64_context *ctx)
 	char		tmp[4];
 
 	res = NULL;
-	while (read_valid_block(ctx->input_fd, buff, 4) > 0)
+	while (read_valid_block(ctx->input_fd, buff) > 0)
 	{
 		data = get_decoded_data(buff);
 		if (data == UINT32_MAX)
@@ -110,7 +110,7 @@ char	*decode(t_base64_context *ctx)
 			i--;
 		}
 		tmp[2 - i] = '\0';
-		res = ft_strjoin(res, tmp, ft_strlen(tmp), 1);
+		res = ft_strjoin(res, tmp, (int)ft_strlen(tmp), 1);
 	}
 	return (res);
 }
@@ -124,7 +124,7 @@ char	*decode_str(const char *str)
 	int			len;
 
 	res = NULL;
-	len = ft_strlen(str);
+	len = (int)ft_strlen(str);
 	while (len > 0)
 	{
 		data = get_decoded_data(str);
@@ -137,7 +137,7 @@ char	*decode_str(const char *str)
 			ft_memset(tmp + (2 - i), ((char *)&data)[i], 1);
 			i--;
 		}
-		res = ft_strjoin(res, tmp, ft_strlen(tmp), 1);
+		res = ft_strjoin(res, tmp, (int)ft_strlen(tmp), 1);
 		len -= 4;
 		str += 4;
 	}

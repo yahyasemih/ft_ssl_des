@@ -11,7 +11,6 @@
 /* ************************************************************************** */
 
 #include <readline/readline.h>
-#include <readline/history.h>
 #include "ft_ssl.h"
 
 static int	arg_count(const char *line)
@@ -78,7 +77,7 @@ static int	handle_strings(const char *line, int *i, int *j, char **argv)
 			else if (line[*i] == '\'')
 				argv[(*j)++] = process_arg(line, ++(*i), "'");
 			if (argv[old_j] != NULL)
-				*i += ft_strlen(argv[old_j]) + 1;
+				*i += (int)ft_strlen(argv[old_j]) + 1;
 			else
 				return (1);
 		}

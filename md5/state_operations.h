@@ -23,6 +23,6 @@ void	do_h(t_md5_context *ctx, uint32_t i);
 
 void	do_i(t_md5_context *ctx, uint32_t i);
 
-void	rotate_states(uint32_t *bloc, uint32_t i, t_md5_context *ctx);
+void	rotate_states(const uint32_t *bloc, uint32_t i, t_md5_context *ctx);
 
 #endif

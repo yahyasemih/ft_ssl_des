@@ -17,7 +17,7 @@
 # include "utils/hex_str_to_int.h"
 # include "utils/swap_bytes.h"
 
-void	init(uint64_t *data, t_des_processing_context *pr_ctx,
+void	init(const uint64_t *data, t_des_processing_context *pr_ctx,
 			t_des_context *ctx);
 
 void	generate_sub_keys_parts(t_des_processing_context *pr_ctx);

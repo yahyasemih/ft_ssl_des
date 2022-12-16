@@ -156,7 +156,6 @@ typedef struct s_des_processing_context
 	uint32_t	f;
 	uint64_t	pre_out;
 	uint64_t	expanded;
-	uint16_t	iv;
 }	t_des_processing_context;
 
 int		handle_option_param(t_des_context *ctx, char opt, const char *arg);

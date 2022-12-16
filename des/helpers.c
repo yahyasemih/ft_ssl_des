@@ -60,13 +60,14 @@ int	handle_option_param(t_des_context *ctx, char opt, const char *arg)
 			return (1);
 	}
 	else if (opt == 'k')
-		ft_memcpy(&ctx->key, arg, min(ft_strlen(arg) + 1, 16));
+		ft_memcpy(&ctx->key, arg, min((int)ft_strlen(arg) + 1, 16));
 	else if (opt == 's')
-		ft_memcpy(&ctx->salt, arg, min(ft_strlen(arg) + 1, 16));
+		ft_memcpy(&ctx->salt, arg, min((int)ft_strlen(arg) + 1, 16));
 	else if (opt == 'p')
-		ft_memcpy(&ctx->passwd, arg, min(ft_strlen(arg) + 1, _PASSWORD_LEN));
+		ft_memcpy(&ctx->passwd, arg, min((int)ft_strlen(arg) + 1,
+				_PASSWORD_LEN));
 	else if (opt == 'v')
-		ft_memcpy(&ctx->iv, arg, min(ft_strlen(arg) + 1, 16));
+		ft_memcpy(&ctx->iv, arg, min((int)ft_strlen(arg) + 1, 16));
 	return (0);
 }
 

@@ -36,7 +36,7 @@ void	do_i(t_md5_context *ctx, uint32_t i)
 	ctx->g = (7 * i) % 16;
 }
 
-void	rotate_states(uint32_t *bloc, uint32_t i, t_md5_context *ctx)
+void	rotate_states(const uint32_t *bloc, uint32_t i, t_md5_context *ctx)
 {
 	uint32_t	tmp;
 	uint32_t	left_rotate;

@@ -62,7 +62,7 @@ void	sha256_block_iteration(t_sha256_context *ctx)
 	sha256_update_ctx(ctx, 1);
 }
 
-void	sha256_process_block(uint32_t *bloc, t_sha256_context *ctx)
+void	sha256_process_block(const uint32_t *bloc, t_sha256_context *ctx)
 {
 	uint32_t	t;
 

@@ -20,7 +20,7 @@ int	get_password(const char *prompt, char *dst, size_t len)
 	pass = getpass(prompt);
 	if (pass == NULL)
 		return (1);
-	ft_memcpy(dst, pass, min(ft_strlen(pass), len) + 1);
+	ft_memcpy(dst, pass, min((int)ft_strlen(pass), (int)len) + 1);
 	write(1, "Verifying - ", 12);
 	verify_pass = getpass(prompt);
 	if (verify_pass == NULL)

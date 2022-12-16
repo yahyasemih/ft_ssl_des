@@ -47,18 +47,17 @@ char	*encode(t_base64_context *ctx)
 	char			*res;
 	char			*tmp;
 
-	r = 1;
 	res = NULL;
-	while (r > 0)
+	while (1)
 	{
 		r = ft_read_block(ctx->input_fd, (char *)buff, 3);
 		if (r <= 0)
 			break ;
 		tmp = encode_block(buff, r);
-		res = ft_strjoin(res, tmp, ft_strlen(tmp), 1);
-		free(tmp);
+		res = ft_strjoin(res, tmp, (int)ft_strlen(tmp), 1);
 		if (tmp == NULL)
 			return (NULL);
+		free(tmp);
 	}
 	if (r < 0)
 	{
@@ -76,7 +75,7 @@ char	*encode_str(const char *str)
 	char	*tmp;
 	int		len;
 
-	len = ft_strlen(str);
+	len = (int)ft_strlen(str);
 	res = NULL;
 	i = 0;
 	while (i < len)
@@ -85,10 +84,10 @@ char	*encode_str(const char *str)
 			tmp = encode_block((const unsigned char *)str + i, 3);
 		else
 			tmp = encode_block((const unsigned char *)str + i, len - i);
-		res = ft_strjoin(res, tmp, ft_strlen(tmp), 1);
-		free(tmp);
+		res = ft_strjoin(res, tmp, (int)ft_strlen(tmp), 1);
 		if (tmp == NULL)
 			return (NULL);
+		free(tmp);
 		i += 3;
 	}
 	free((char *)str);

@@ -12,7 +12,6 @@
 
 #include "sha256.h"
 #include "block_operations.h"
-#include "state_operations.h"
 #include "string_operations.h"
 
 static char	*sha256_last_stream_block(t_sha256_context *ctx, char *buff,
@@ -44,10 +43,9 @@ char	*sha256_from_stream(int fd)
 	t_sha256_context	ctx;
 	uint64_t			total_len;
 
-	r = 1;
 	total_len = 0;
 	sha256_init_ctx(&ctx);
-	while (r > 0)
+	while (1)
 	{
 		r = ft_read_block(fd, buff, 64);
 		if (r < 0)
@@ -82,7 +80,8 @@ static int	handle_options(int argc, char *argv[], int i, uint32_t *flags)
 	else if (argv[i][1] == 's')
 	{
 		s = sha256_from_string(argv[i + 1], ft_strlen(argv[i + 1]));
-		sha256_print_result(*flags, s, argv[i + 1], ft_strlen(argv[i + 1]));
+		sha256_print_result(*flags, s, argv[i + 1],
+			(int)ft_strlen(argv[i + 1]));
 		++i;
 	}
 	else
@@ -111,7 +110,7 @@ static int	handle_files(char *argv[], int i, uint32_t flags)
 			flags |= F_QUIET;
 		else
 			flags |= F_IS_FILE;
-		sha256_print_result(flags, s, input, ft_strlen(input));
+		sha256_print_result(flags, s, input, (int)ft_strlen(input));
 		free(s);
 	}
 	else
@@ -123,19 +122,17 @@ static int	handle_files(char *argv[], int i, uint32_t flags)
 int	sha256(int argc, char *argv[])
 {
 	int			i;
-	int			fd;
 	uint32_t	flags;
 	int			return_value;
 
 	i = 0;
 	flags = 0;
-	fd = INT32_MAX;
 	return_value = 0;
 	if (argc == 1)
 		handle_files(NULL, 0, F_IS_STDIN);
 	while (++i < argc)
 	{
-		if (fd == INT32_MAX && argv[i][0] == '-')
+		if (argv[i][0] == '-')
 			i = handle_options(argc, argv, i, &flags);
 		else
 			return_value = handle_files(argv, i, flags);
