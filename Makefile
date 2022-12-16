@@ -12,7 +12,8 @@
 
 NAME = ft_ssl
 CC = cc
-CFLAGS = -Wall -Wextra -Werror -I.
+CFLAGS = -Wall -Wextra -Werror
+C_INCLUDE_PATH = .
 LDFLAGS = -lreadline
 SRCS = ft_ssl.c main.c md5/md5.c base64/base64.c base64/encode.c base64/decode.c\
 	utils/commands_utils.c utils/ft_read_block.c utils/libc_utils.c\
@@ -36,17 +37,17 @@ all: $(NAME)
 $(NAME): $(OBJECTS) Makefile
 	@echo "$(RED)Compiling $(NAME)...$(NC)"
 	@echo "$(RED)Linking...$(NC)"
-	@$(CC) $(CFLAGS) $(LDFLAGS) $(OBJECTS) -o $(NAME)
+	@$(CC) $(CFLAGS) -I$(C_INCLUDE_PATH) $(LDFLAGS) $(OBJECTS) -o $(NAME)
 	@echo "$(GREEN)Finished linking && compiling...$(NC)"
 
 %.c:
 
 %.o: %.c
-	@$(CC) $(CFLAGS) -c -o $@ $<
+	@$(CC) $(CFLAGS) -I$(C_INCLUDE_PATH) -c -o $@ $<
 	@echo "$(RED)Compiling $< ...$(NC)"
 
 %.d: %.c
-	@$(CC) $(CFLAGS) -MM -o $@ $<
+	@$(CC) $(CFLAGS) -I$(C_INCLUDE_PATH) -MM -o $@ $<
 
 clean:
 	@echo "$(RED)Cleaning objects...$(NC)"
